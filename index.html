@@ -1,0 +1,2086 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Revive Rides — Mobile Auto Detailing, Delivered to Your Driveway</title>
+<meta name="description" content="Revive Rides is mobile auto detailing that comes to you. Exterior, premium interior, and full detailing packages — book online in under a minute.">
+<meta property="og:title" content="Revive Rides — Mobile Auto Detailing">
+<meta property="og:description" content="Showroom shine, delivered to your driveway. Book your detail online in under a minute.">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23232323'/%3E%3Cpath d='M12 40 L24 22 H40 L52 40' fill='none' stroke='%2300cfff' stroke-width='5' stroke-linecap='round' stroke-linejoin='round'/%3E%3Ccircle cx='20' cy='44' r='5' fill='%230033cc'/%3E%3Ccircle cx='44' cy='44' r='5' fill='%230033cc'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+    /* ============ Reset & tokens ============ */
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+        --bg: #232323;
+        --bg-raised: #2a2a2a;
+        --bg-card: #2e2e2e;
+        --line: rgba(255, 255, 255, 0.08);
+        --line-strong: rgba(255, 255, 255, 0.18);
+
+        --blue: #0033cc;
+        --cyan: #00cfff;
+        --cyan-soft: rgba(0, 207, 255, 0.12);
+
+        --text: #f2f3f4;
+        --text-muted: #b6b9be;
+        --text-dim: #8a8d93;
+
+        --shadow-lg: 0 24px 48px -16px rgba(0, 0, 0, 0.45);
+        --shadow-btn: 0 8px 24px -12px rgba(0, 0, 0, 0.55);
+        --radius: 16px;
+        --radius-sm: 10px;
+
+        --font: 'Josefin Sans', 'Trebuchet MS', sans-serif;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+        font-family: var(--font);
+        background: var(--bg);
+        color: var(--text);
+        line-height: 1.7;
+        overflow-x: hidden;
+        -webkit-font-smoothing: antialiased;
+    }
+
+    ::selection { background: var(--cyan); color: #04101c; }
+
+    .container { width: min(1180px, 92%); margin: 0 auto; }
+
+    section { position: relative; padding: 6.5rem 0; }
+
+    a { color: inherit; }
+
+    button, input, select, textarea { font: inherit; color: inherit; }
+
+    :focus-visible { outline: 2px solid var(--cyan); outline-offset: 3px; border-radius: 4px; }
+
+    /* ============ Header ============ */
+    .site-header {
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+        background: rgba(35, 35, 35, 0.85);
+        backdrop-filter: blur(14px);
+        -webkit-backdrop-filter: blur(14px);
+        border-bottom: 1px solid transparent;
+        transition: border-color 0.3s ease, background 0.3s ease;
+    }
+
+    .site-header.scrolled { border-bottom-color: var(--line); background: rgba(35, 35, 35, 0.95); }
+
+    .header-inner { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 1rem 0; }
+
+    .logo { display: flex; align-items: center; gap: 0.65rem; text-decoration: none; }
+
+    .logo svg { width: 40px; height: 40px; flex: none; }
+
+    .logo-word { font-family: var(--font); font-weight: 700; font-size: 1.6rem; letter-spacing: 0.06em; line-height: 1; }
+
+    .logo-word em { font-style: normal; color: var(--cyan); }
+
+    .logo-word small { display: block; font-family: var(--font); font-size: 0.58rem; font-weight: 600; letter-spacing: 0.42em; color: var(--text-dim); text-transform: uppercase; margin-top: 2px; }
+
+    .main-nav { display: flex; align-items: center; gap: 1.75rem; }
+
+    .main-nav a:not(.btn) { color: var(--text-muted); text-decoration: none; font-size: 0.92rem; font-weight: 500; transition: color 0.2s; }
+
+    .main-nav a:not(.btn):hover { color: var(--text); }
+
+    .btn {
+        display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
+        padding: 0.8rem 1.6rem;
+        background: var(--blue);
+        color: #fff; text-decoration: none;
+        border: none; border-radius: var(--radius-sm);
+        font-weight: 700; font-size: 0.95rem; letter-spacing: 0.01em;
+        cursor: pointer;
+        box-shadow: var(--shadow-btn);
+        transition: transform 0.25s ease, box-shadow 0.25s ease, filter 0.25s ease;
+    }
+
+    .btn:hover { transform: translateY(-2px); filter: brightness(1.12); box-shadow: 0 12px 28px -12px rgba(0, 0, 0, 0.6); }
+    .btn:active { transform: translateY(0); }
+    .btn .arrow { transition: transform 0.25s ease; }
+    .btn:hover .arrow { transform: translateX(4px); }
+
+    .btn-ghost {
+        background: transparent; color: var(--text);
+        border: 1px solid var(--line-strong);
+        box-shadow: none;
+    }
+    .btn-ghost:hover { border-color: var(--cyan); color: var(--cyan); box-shadow: none; filter: none; }
+
+    .btn-lg { padding: 1.05rem 2.2rem; font-size: 1.05rem; border-radius: 12px; }
+
+    .nav-toggle {
+        display: none;
+        flex-direction: column; justify-content: center; gap: 5px;
+        width: 44px; height: 44px; padding: 0 11px;
+        background: transparent; border: 1px solid var(--line-strong); border-radius: var(--radius-sm);
+        cursor: pointer;
+    }
+    .nav-toggle span { display: block; height: 2px; background: var(--text); border-radius: 2px; transition: transform 0.3s ease, opacity 0.3s ease; }
+    .nav-toggle.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .nav-toggle.open span:nth-child(2) { opacity: 0; }
+    .nav-toggle.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+    /* ============ Hero ============ */
+    .hero { padding: 5.5rem 0 6rem; overflow: hidden; }
+
+    .hero-grid { position: relative; display: grid; grid-template-columns: 1.05fr 0.95fr; gap: 3rem; align-items: center; }
+
+    .hero-badge {
+        display: inline-flex; align-items: center; gap: 0.55rem;
+        padding: 0.45rem 1rem;
+        background: var(--cyan-soft);
+        border: 1px solid rgba(0, 207, 255, 0.3);
+        border-radius: 999px;
+        color: var(--cyan);
+        font-size: 0.82rem; font-weight: 600; letter-spacing: 0.04em;
+        margin-bottom: 1.5rem;
+    }
+
+    .hero-badge .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--cyan); box-shadow: 0 0 12px var(--cyan); }
+
+    .hero h1 {
+        font-family: var(--font);
+        font-size: clamp(3rem, 6.5vw, 4.9rem);
+        font-weight: 700;
+        line-height: 0.98;
+        letter-spacing: 0.01em;
+        text-transform: uppercase;
+        margin-bottom: 1.25rem;
+    }
+
+    .hero h1 em { font-style: normal; color: var(--cyan); }
+
+    .hero-sub { font-size: 1.18rem; color: var(--text-muted); max-width: 34rem; margin-bottom: 2.25rem; }
+
+    .hero-ctas { display: flex; flex-wrap: wrap; gap: 1rem; margin-bottom: 2.5rem; }
+
+    .hero-chips { display: flex; flex-wrap: wrap; gap: 0.6rem 1.6rem; }
+
+    .hero-chips span { display: inline-flex; align-items: center; gap: 0.5rem; color: var(--text-dim); font-size: 0.88rem; font-weight: 500; }
+
+    .hero-chips span::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--cyan); }
+
+    .hero-visual { position: relative; }
+
+    .hero-photos {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 18px;
+    }
+
+    .hero-photo {
+        position: relative;
+        overflow: hidden;
+        aspect-ratio: 3 / 4;
+        background: var(--bg-card);
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        box-shadow: var(--shadow-lg);
+    }
+
+    .hero-photo::after {
+        content: '';
+        position: absolute; inset: 0;
+        border-radius: inherit;
+        background: linear-gradient(180deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0) 38%);
+        pointer-events: none;
+    }
+
+    .hero-photo img {
+        width: 100%; height: 100%;
+        object-fit: cover;
+        object-position: center 20%;
+        display: block;
+    }
+
+    /* ============ Section headings ============ */
+    .section-head { text-align: center; max-width: 44rem; margin: 0 auto 3.5rem; }
+
+    .kicker {
+        display: inline-block;
+        font-size: 0.8rem; font-weight: 700; letter-spacing: 0.28em; text-transform: uppercase;
+        color: var(--cyan);
+        margin-bottom: 0.9rem;
+    }
+
+    .section-head h2 {
+        font-family: var(--font);
+        font-size: clamp(2rem, 4.5vw, 2.9rem);
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.02em;
+        line-height: 1.05;
+        margin-bottom: 0.9rem;
+    }
+
+    .section-head p { color: var(--text-muted); font-size: 1.05rem; }
+
+    /* ============ Services ============ */
+    .services { background: var(--bg-raised); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+
+    .services-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
+
+    .service-card {
+        position: relative;
+        display: flex; flex-direction: column;
+        background: var(--bg-card);
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        padding: 2.25rem 2rem;
+        transition: transform 0.35s ease, border-color 0.35s ease, box-shadow 0.35s ease;
+    }
+
+    .service-card:hover { transform: translateY(-8px); border-color: rgba(0, 207, 255, 0.45); box-shadow: var(--shadow-lg); }
+
+    .service-card.featured { border-color: rgba(0, 207, 255, 0.4); background: var(--bg-card); }
+
+    .pop-badge {
+        position: absolute; top: -13px; left: 50%; transform: translateX(-50%);
+        padding: 0.3rem 0.9rem;
+        background: var(--blue); color: #fff;
+        border-radius: 999px;
+        font-size: 0.72rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;
+        white-space: nowrap;
+    }
+
+    .service-icon {
+        width: 56px; height: 56px;
+        display: grid; place-items: center;
+        background: var(--cyan-soft);
+        border: 1px solid rgba(0, 207, 255, 0.25);
+        border-radius: 14px;
+        margin-bottom: 1.5rem;
+    }
+
+    .service-icon svg { width: 28px; height: 28px; }
+
+    .service-card h3 { font-family: var(--font); font-size: 1.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.03em; margin-bottom: 0.6rem; }
+
+    .service-card > p { color: var(--text-muted); font-size: 0.98rem; margin-bottom: 1.25rem; }
+
+    .service-feats { list-style: none; margin-bottom: 1.75rem; flex: 1; }
+
+    .service-feats li { position: relative; padding: 0.4rem 0 0.4rem 1.6rem; color: var(--text-muted); font-size: 0.92rem; }
+
+    .service-feats li::before {
+        content: '';
+        position: absolute; left: 0; top: 0.72rem;
+        width: 14px; height: 14px;
+        background: var(--cyan-soft);
+        border-radius: 50%;
+    }
+
+    .service-feats li::after {
+        content: '';
+        position: absolute; left: 3.5px; top: 1.02rem;
+        width: 7px; height: 4px;
+        border-left: 2px solid var(--cyan);
+        border-bottom: 2px solid var(--cyan);
+        transform: rotate(-45deg);
+    }
+
+    .price-row { display: flex; align-items: baseline; gap: 0.6rem; margin-bottom: 1.25rem; }
+
+    .price { font-family: var(--font); font-size: 2.1rem; font-weight: 700; color: var(--text); }
+
+    .price-note { color: var(--text-dim); font-size: 0.85rem; }
+
+    .card-btn { width: 100%; }
+
+    .fine-print { text-align: center; color: var(--text-dim); font-size: 0.85rem; margin-top: 2rem; }
+
+    /* ============ Why us ============ */
+    .why-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.25rem; }
+
+    .why-item { padding: 1.75rem 1.5rem; background: var(--bg-raised); border: 1px solid var(--line); border-radius: var(--radius); transition: transform 0.3s ease, border-color 0.3s ease; }
+
+    .why-item:hover { transform: translateY(-4px); border-color: var(--line-strong); }
+
+    .why-item .why-icon { width: 42px; height: 42px; display: grid; place-items: center; color: var(--cyan); margin-bottom: 1rem; }
+
+    .why-item .why-icon svg { width: 30px; height: 30px; }
+
+    .why-item h3 { font-size: 1.02rem; font-weight: 700; margin-bottom: 0.4rem; }
+
+    .why-item p { color: var(--text-muted); font-size: 0.9rem; line-height: 1.6; }
+
+    /* ============ Process ============ */
+    .process { background: var(--bg-raised); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+
+    .process-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
+
+    .step { position: relative; padding: 2rem 1.75rem; background: var(--bg-raised); border: 1px solid var(--line); border-radius: var(--radius); }
+
+    .step-num {
+        font-family: var(--font);
+        font-size: 3.2rem; font-weight: 700; line-height: 1;
+        color: var(--cyan);
+        opacity: 0.9;
+        margin-bottom: 0.75rem;
+    }
+
+    .step h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: 0.5rem; }
+
+    .step p { color: var(--text-muted); font-size: 0.93rem; }
+
+    /* ============ Water notice ============ */
+    .water-notice {
+        display: flex; gap: 1.25rem; align-items: flex-start;
+        max-width: 880px;
+        margin: 0 auto;
+        padding: 1.75rem 2rem;
+        background: rgba(0, 207, 255, 0.07);
+        border: 1px solid rgba(0, 207, 255, 0.25);
+        border-radius: var(--radius);
+    }
+
+    .water-notice .notice-icon { width: 46px; height: 46px; flex: none; display: grid; place-items: center; background: var(--cyan-soft); border-radius: 12px; }
+
+    .water-notice .notice-icon svg { width: 24px; height: 24px; }
+
+    .water-notice h3 { font-size: 1.05rem; font-weight: 700; margin-bottom: 0.4rem; }
+
+    .water-notice p { color: var(--text-muted); font-size: 0.95rem; }
+
+    .water-notice strong { color: var(--text); }
+
+    .water-notice p + p { margin-top: 0.8rem; }
+
+    .water-notice .pay-note { margin-top: 1.1rem; padding-top: 0.9rem; border-top: 1px solid rgba(0, 207, 255, 0.18); }
+
+    /* ============ Booking ============ */
+    .plan-picker { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; margin-bottom: 2rem; }
+
+    .plan-tile {
+        display: flex; flex-direction: column; gap: 0.3rem;
+        padding: 1.5rem 1.5rem 1.25rem;
+        background: var(--bg-raised);
+        border: 2px solid var(--line);
+        border-radius: var(--radius);
+        cursor: pointer;
+        text-align: left;
+        transition: border-color 0.2s ease, background 0.2s ease, transform 0.2s ease;
+    }
+
+    .plan-tile:hover { border-color: var(--line-strong); transform: translateY(-2px); }
+
+    .plan-tile.selected { border-color: var(--cyan); background: var(--bg-card); box-shadow: 0 0 0 3px rgba(0, 207, 255, 0.12); }
+
+    .plan-tile .tile-name { font-family: var(--font); font-size: 1.3rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.03em; }
+
+    .plan-tile .tile-meta { color: var(--text-muted); font-size: 0.88rem; display: flex; justify-content: space-between; align-items: baseline; gap: 0.75rem; }
+
+    .plan-tile .tile-price { font-family: var(--font); font-size: 1.5rem; font-weight: 700; color: var(--cyan); }
+
+    .plan-tile .tile-check { align-self: flex-start; margin-top: 0.6rem; width: 22px; height: 22px; display: grid; place-items: center; border: 1px solid var(--line-strong); border-radius: 50%; color: transparent; font-size: 0.75rem; font-weight: 700; }
+
+    .plan-tile.selected .tile-check { border-color: var(--cyan); background: var(--cyan-soft); color: var(--cyan); }
+
+    .booking-panel {
+        background: var(--bg-card);
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        padding: 2.25rem;
+        max-width: 760px;
+        margin: 0 auto;
+    }
+
+    .booking-panel .btn { width: 100%; margin-top: 0.5rem; }
+
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; }
+
+    .field { display: flex; flex-direction: column; gap: 0.45rem; margin-bottom: 1.25rem; }
+
+    .field label { font-size: 0.85rem; font-weight: 600; color: var(--text-muted); letter-spacing: 0.02em; }
+
+    .field label .req { color: var(--cyan); }
+
+    .field input, .field select, .field textarea {
+        width: 100%;
+        padding: 0.85rem 1rem;
+        background: var(--bg);
+        border: 1px solid var(--line-strong);
+        border-radius: var(--radius-sm);
+        font-size: 0.95rem;
+        transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        color-scheme: dark;
+    }
+
+    .field input::placeholder, .field textarea::placeholder { color: var(--text-dim); }
+
+    .field input:focus, .field select:focus, .field textarea:focus {
+        outline: none;
+        border-color: var(--cyan);
+        box-shadow: 0 0 0 3px rgba(0, 207, 255, 0.15);
+    }
+
+    .field textarea { resize: vertical; min-height: 96px; }
+
+    .field-check { display: flex; align-items: center; gap: 0.6rem; margin-bottom: 1.25rem; }
+
+    .field-check input[type="checkbox"] {
+        width: 1.1rem;
+        height: 1.1rem;
+        flex-shrink: 0;
+        accent-color: var(--cyan);
+    }
+
+    .field-check label { font-size: 0.95rem; font-weight: 600; color: var(--text-muted); cursor: pointer; }
+
+    .form-note { text-align: center; color: var(--text-dim); font-size: 0.8rem; margin-top: 0.9rem; }
+    .form-error { color: #ff5a6e; font-size: 0.78rem; margin-top: 0.4rem; font-weight: 600; }
+
+    /* ============ Availability calendar ============ */
+    .calendar {
+        background: var(--bg-raised);
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        padding: 1.5rem;
+    }
+
+    .cal-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; }
+
+    .cal-title { font-family: var(--font); font-size: 1.2rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; }
+
+    .cal-nav {
+        width: 38px; height: 38px;
+        display: grid; place-items: center;
+        background: transparent; border: 1px solid var(--line-strong); border-radius: var(--radius-sm);
+        color: var(--text-muted); font-size: 1.2rem; line-height: 1; cursor: pointer;
+    }
+
+    .cal-nav:hover:not(:disabled) { color: var(--cyan); border-color: var(--cyan); }
+
+    .cal-nav:disabled { opacity: 0.3; cursor: not-allowed; }
+
+    .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; }
+
+    .cal-dow { text-align: center; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.1em; color: var(--text-dim); text-transform: uppercase; padding: 0.35rem 0; }
+
+    .cal-day {
+        position: relative;
+        aspect-ratio: 1;
+        display: flex; align-items: center; justify-content: center;
+        border: 1px solid transparent; border-radius: 10px;
+        background: rgba(255, 255, 255, 0.04);
+        color: var(--text);
+        font-size: 0.92rem; font-weight: 600;
+        cursor: pointer;
+        transition: border-color 0.15s ease, background 0.15s ease;
+    }
+
+    .cal-day:hover:not(:disabled) { border-color: var(--cyan); }
+
+    .cal-day:disabled { cursor: not-allowed; }
+
+    .cal-day.empty { background: transparent; border: none; cursor: default; }
+
+    .cal-day.past, .cal-day.closed { background: transparent; color: var(--text-dim); opacity: 0.45; }
+
+    .cal-day.booked { background: rgba(255, 90, 110, 0.08); color: var(--text-dim); }
+
+    .cal-day.booked::after {
+        content: '';
+        position: absolute; left: 18%; right: 18%; top: 50%; height: 2px;
+        background: #ff5a6e;
+        transform: rotate(-35deg);
+    }
+
+    .cal-day.selected { border-color: var(--cyan); background: var(--cyan-soft); color: var(--cyan); }
+
+    .cal-day.today:not(.booked):not(.past)::before {
+        content: '';
+        position: absolute; bottom: 6px;
+        width: 5px; height: 5px; border-radius: 50%;
+        background: var(--cyan);
+    }
+
+    /* ============ Time slot picker ============ */
+    .slot-picker { margin-top: 0.9rem; }
+
+    .slot-label { font-size: 0.85rem; font-weight: 700; color: var(--text); margin-bottom: 0.55rem; }
+
+    .slot-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 0.5rem; }
+
+    /* Weekend slot-group headers — Morning / Early afternoon / Late afternoon */
+    .slot-group-header {
+        grid-column: 1 / -1;
+        margin-top: 0.35rem;
+        font-size: 0.62rem; font-weight: 700;
+        letter-spacing: 0.08em; text-transform: uppercase;
+        color: var(--text-dim);
+    }
+    .slot-group-header:first-child { margin-top: 0; }
+    .slot-group-header .slot-group-name { display: block; }
+    .slot-group-header .slot-group-range {
+        display: block;
+        margin-top: 0.1rem;
+        font-size: 0.6rem;
+        font-weight: 600;
+        letter-spacing: 0.04em;
+        text-transform: none;
+        opacity: 0.85;
+    }
+    /* Currently-open slot group — cyan accent, matching the site's
+       cyan-dot treatment (see .hero-chips span::before) */
+    .slot-group-header.slot-group-open { color: var(--cyan); }
+    .slot-group-header.slot-group-open .slot-group-name::before {
+        content: '';
+        display: inline-block;
+        width: 6px; height: 6px;
+        border-radius: 50%;
+        background: var(--cyan);
+        margin-right: 0.45rem;
+        vertical-align: 1px;
+    }
+    .slot-group-header.slot-group-open .slot-group-range { opacity: 1; }
+
+    .slot-btn {
+        padding: 0.6rem 0.5rem;
+        background: var(--bg);
+        border: 1px solid var(--line-strong);
+        border-radius: var(--radius-sm);
+        color: var(--text);
+        font-size: 0.88rem; font-weight: 600;
+        cursor: pointer;
+        transition: border-color 0.15s ease, background 0.15s ease, color 0.15s ease;
+    }
+
+    .slot-btn:hover:not(:disabled):not(.selected) { border-color: var(--cyan); }
+
+    .slot-btn.selected { border-color: var(--cyan); background: var(--cyan-soft); color: var(--cyan); }
+
+    .slot-btn:disabled { cursor: not-allowed; color: var(--text-dim); background: transparent; border-style: dashed; }
+
+    /* 24-hour-cutoff slots — grayed out, but visibly different from
+       Booked (solid border, no red tint) and from Unavailable (no dashes). */
+    .slot-btn.cutoff:disabled { border-style: solid; border-color: var(--line); opacity: 0.55; }
+
+    .slot-btn.cutoff .slot-status { color: #9aa3ad; }
+
+    /* Cyan check on used weekend slot-group headers */
+    .slot-group-check { margin-right: 0.45rem; color: var(--cyan); }
+
+    /* ============ Confirmation link box ============ */
+    .i-booked {
+        max-width: 760px; margin: -0.75rem auto 2.25rem;
+        padding: 1.5rem 2rem;
+        background: rgba(0, 207, 255, 0.07);
+        border: 1px solid rgba(0, 207, 255, 0.3);
+        border-radius: var(--radius);
+        display: flex; flex-direction: column; align-items: center; gap: 0.6rem;
+        text-align: center;
+    }
+
+    .i-booked-note { color: var(--text-muted); font-size: 0.95rem; margin: 0; }
+
+    .i-booked-when { color: var(--cyan); font-size: 0.88rem; font-weight: 600; margin: 0; }
+
+    .i-booked-when:empty { display: none; }
+
+    .confirm-link-row { display: flex; gap: 0.5rem; width: 100%; max-width: 560px; margin-top: 0.25rem; }
+
+    .confirm-link-input {
+        flex: 1;
+        min-width: 0;
+        padding: 0.6rem 0.9rem;
+        background: var(--bg);
+        border: 1px solid var(--line-strong);
+        border-radius: var(--radius-sm);
+        color: var(--cyan);
+        font-family: var(--font);
+        font-size: 0.85rem;
+    }
+
+    .confirm-link-input:focus { outline: none; border-color: var(--cyan); }
+
+    .confirm-link-row .btn { flex: none; padding: 0.6rem 1.4rem; }
+
+    .slot-btn .slot-status { display: block; font-size: 0.62rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: inherit; }
+
+    .cal-window { margin-top: 0.9rem; font-size: 0.88rem; color: var(--text-muted); text-align: center; min-height: 1.4em; }
+
+    .cal-window strong { color: var(--cyan); }
+
+    .cal-legend { display: flex; flex-wrap: wrap; gap: 0.6rem 1.4rem; justify-content: center; margin-top: 1rem; font-size: 0.78rem; color: var(--text-dim); }
+
+    .cal-legend span { display: inline-flex; align-items: center; gap: 0.4rem; }
+
+    .cal-legend i { width: 12px; height: 12px; border-radius: 4px; display: inline-block; }
+
+    .cal-legend .lg-open { background: rgba(255, 255, 255, 0.12); }
+
+    .cal-legend .lg-sel { background: var(--cyan-soft); border: 1px solid var(--cyan); }
+
+    .cal-legend .lg-x { background: rgba(255, 90, 110, 0.08); border: 1px solid rgba(255, 90, 110, 0.4); }
+
+    /* ============ Plan detail modal ============ */
+    .modal-overlay {
+        position: fixed; inset: 0;
+        background: rgba(0, 0, 0, 0.7);
+        backdrop-filter: blur(4px);
+        display: none;
+        align-items: flex-start; justify-content: center;
+        padding: 4rem 1.25rem 2rem;
+        z-index: 1500;
+        overflow-y: auto;
+    }
+
+    .modal-overlay.open { display: flex; }
+
+    .modal {
+        width: 100%; max-width: 540px;
+        background: var(--bg-card);
+        border: 1px solid var(--line-strong);
+        border-radius: var(--radius);
+        box-shadow: var(--shadow-lg);
+    }
+
+    .modal-head { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 1.5rem 1.75rem 1rem; }
+
+    .modal-head h3 { font-family: var(--font); font-size: 1.6rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.02em; }
+
+    .modal-close {
+        width: 38px; height: 38px; flex: none;
+        display: grid; place-items: center;
+        background: transparent; border: 1px solid var(--line-strong); border-radius: 50%;
+        color: var(--text-muted); font-size: 1.15rem; line-height: 1;
+        cursor: pointer;
+    }
+
+    .modal-close:hover { color: var(--text); border-color: var(--text-muted); }
+
+    .modal-body { padding: 0 1.75rem 1.75rem; }
+
+    .modal-price-row { display: flex; align-items: baseline; gap: 0.75rem; margin-bottom: 0.75rem; }
+
+    .modal-price { font-family: var(--font); font-size: 2.2rem; font-weight: 700; color: var(--cyan); }
+
+    .modal-duration { color: var(--text-dim); font-size: 0.9rem; }
+
+    .modal-desc { color: var(--text-muted); font-size: 0.97rem; margin-bottom: 1.25rem; }
+
+    .modal-divider { border: none; border-top: 1px solid var(--line); margin: 1.5rem 0; }
+
+    .modal-form-title { font-size: 0.85rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 1rem; }
+
+    /* ============ Legal modal ============ */
+    .legal-copy p { color: var(--text-muted); font-size: 0.92rem; margin-bottom: 0.9rem; }
+
+    .legal-copy strong { color: var(--text); }
+
+    .legal-modal { max-width: 680px; }
+
+    .legal-effective { color: var(--text-dim); font-size: 0.85rem; margin-bottom: 1.25rem; }
+
+    .legal-copy h4 {
+        font-family: var(--font);
+        font-size: 1.02rem; font-weight: 700;
+        color: var(--text);
+        margin: 1.3rem 0 0.5rem;
+    }
+
+    .legal-copy ul { list-style: none; margin: 0 0 0.9rem; }
+
+    .legal-copy li { position: relative; padding: 0.25rem 0 0.25rem 1.4rem; color: var(--text-muted); font-size: 0.92rem; }
+
+    .legal-copy li::before {
+        content: '';
+        position: absolute; left: 0.3rem; top: 0.8rem;
+        width: 6px; height: 6px; border-radius: 50%;
+        background: var(--cyan);
+    }
+
+    /* ============ Contact strip ============ */
+    .contact-strip { padding: 4.5rem 0; }
+
+    .contact-inner {
+        display: grid; grid-template-columns: 1fr auto; gap: 2rem; align-items: center;
+        padding: 2.75rem 3rem;
+        background: var(--blue);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        border-radius: calc(var(--radius) + 6px);
+    }
+
+    .contact-inner h2 { font-family: var(--font); font-size: clamp(1.7rem, 3.5vw, 2.4rem); font-weight: 700; text-transform: uppercase; line-height: 1.1; margin-bottom: 0.5rem; }
+
+    .contact-inner p { color: rgba(238, 242, 251, 0.75); font-size: 1rem; }
+
+    .contact-links { display: flex; flex-direction: column; gap: 0.75rem; align-items: flex-end; }
+
+    .contact-links a { color: var(--text); text-decoration: none; font-weight: 600; font-size: 1rem; display: inline-flex; align-items: center; gap: 0.6rem; transition: color 0.2s; }
+
+    .contact-links a:hover { color: var(--cyan); }
+
+    .contact-links svg { width: 18px; height: 18px; }
+
+    /* ============ Footer ============ */
+    .site-footer { border-top: 1px solid var(--line); padding: 2.75rem 0; }
+
+    .footer-inner { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 1rem; }
+
+    .site-footer p { color: var(--text-dim); font-size: 0.88rem; }
+
+    .footer-note { display: inline-flex; align-items: center; gap: 0.4rem; font-size: 0.82rem; font-weight: 600; color: var(--cyan); margin-top: 0.15rem; }
+
+    .footer-links { display: flex; flex-wrap: wrap; align-items: center; gap: 1.5rem; }
+
+    .footer-links .footer-sep { color: var(--line-strong); user-select: none; }
+
+    .footer-links a { color: var(--text-dim); text-decoration: none; font-size: 0.88rem; transition: color 0.2s; }
+
+    .footer-links a:hover { color: var(--cyan); }
+
+    /* ============ Toast ============ */
+    .toast {
+        position: fixed;
+        left: 50%; bottom: 2rem;
+        transform: translate(-50%, 150%);
+        display: flex; align-items: center; gap: 0.75rem;
+        padding: 1rem 1.5rem;
+        background: var(--bg-card);
+        border: 1px solid rgba(0, 207, 255, 0.4);
+        border-radius: 14px;
+        box-shadow: var(--shadow-lg);
+        font-size: 0.95rem; font-weight: 500;
+        z-index: 2000;
+        transition: transform 0.45s cubic-bezier(0.2, 0.9, 0.3, 1.2);
+        max-width: min(92vw, 480px);
+    }
+
+    .toast.show { transform: translate(-50%, 0); }
+
+    .toast .toast-icon { width: 26px; height: 26px; flex: none; display: grid; place-items: center; background: var(--cyan-soft); border-radius: 50%; }
+
+    .toast .toast-icon svg { width: 14px; height: 14px; }
+
+    /* ============ Responsive ============ */
+    @media (max-width: 1024px) {
+        .hero-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+        .hero-visual { max-width: 560px; margin: 0 auto; }
+        .services-grid, .process-grid { grid-template-columns: 1fr 1fr; }
+        .why-grid { grid-template-columns: 1fr 1fr; }
+    }
+
+    @media (max-width: 820px) {
+        .nav-toggle { display: flex; }
+
+        .main-nav {
+            position: fixed;
+            top: 65px; left: 0; right: 0;
+            flex-direction: column;
+            align-items: stretch;
+            gap: 0;
+            padding: 0.75rem 4% 1.5rem;
+            background: rgba(35, 35, 35, 0.98);
+            backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--line);
+            transform: translateY(-12px);
+            opacity: 0;
+            pointer-events: none;
+            transition: transform 0.3s ease, opacity 0.3s ease;
+        }
+
+        .main-nav.open { transform: translateY(0); opacity: 1; pointer-events: auto; }
+
+        .main-nav a:not(.btn) { padding: 0.9rem 0.25rem; font-size: 1.05rem; border-bottom: 1px solid var(--line); }
+
+        .main-nav .btn { margin-top: 1.1rem; justify-content: center; }
+
+        .contact-inner { grid-template-columns: 1fr; text-align: center; padding: 2.5rem 1.75rem; }
+        .contact-links { align-items: center; }
+    }
+
+    @media (max-width: 640px) {
+        section { padding: 4.5rem 0; }
+        .services-grid, .process-grid, .why-grid, .form-row, .plan-picker { grid-template-columns: 1fr; }
+        .booking-panel { padding: 1.5rem; }
+        .modal-overlay { padding: 1.5rem 1rem; }
+        .hero { padding: 3.5rem 0 4rem; }
+        .hero-ctas .btn { width: 100%; }
+        .hero-photos { grid-template-columns: 1fr; }
+        .water-notice { flex-direction: column; padding: 1.5rem; }
+
+        /* ---- Mobile-only vertical compaction ----
+           Tightens spacing/sizing on small screens so the page scrolls
+           shorter. No content removed; desktop/tablet rules above are
+           untouched. */
+        section { padding: 3.25rem 0; }
+        .section-head { margin-bottom: 2.25rem; }
+        .section-head h2 { margin-bottom: 0.6rem; }
+        .section-head p { font-size: 0.98rem; }
+        .services-grid, .process-grid, .why-grid { gap: 0.9rem; }
+        .service-card { padding: 1.4rem 1.25rem; }
+        .service-card h3 { font-size: 1.35rem; margin-bottom: 0.45rem; }
+        .service-card > p { font-size: 0.95rem; margin-bottom: 0.9rem; }
+        .service-feats { margin-bottom: 1.15rem; }
+        .service-feats li { padding: 0.22rem 0 0.22rem 1.6rem; }
+        .price-row { margin-bottom: 0.9rem; }
+        .price { font-size: 1.75rem; }
+        .card-btn { padding: 0.7rem 1.4rem; }
+        .why-item { padding: 1.2rem 1rem; }
+        .why-item .why-icon { width: 34px; height: 34px; margin-bottom: 0.6rem; }
+        .why-item .why-icon svg { width: 24px; height: 24px; }
+        .why-item p { line-height: 1.45; }
+        .step { padding: 1.3rem 1.1rem; }
+        .step-num { font-size: 2.2rem; margin-bottom: 0.5rem; }
+        .step h3 { margin-bottom: 0.35rem; }
+        .water-notice { padding: 1.15rem 1.1rem; gap: 0.9rem; }
+        .water-notice .notice-icon { width: 38px; height: 38px; }
+        .hero { padding: 2.5rem 0 3rem; }
+        .hero h1 { font-size: clamp(2.5rem, 11vw, 3.5rem); margin-bottom: 1rem; }
+        .hero-sub { font-size: 1.05rem; margin-bottom: 1.5rem; }
+        .hero-ctas { gap: 0.75rem; margin-bottom: 1.75rem; }
+        .hero-photos { grid-template-columns: 1fr 1fr; gap: 12px; }
+        .hero-photo { aspect-ratio: 3 / 4; }
+        .plan-picker { gap: 0.75rem; margin-bottom: 1.25rem; }
+        .plan-tile { padding: 1rem 1rem 0.9rem; gap: 0.2rem; }
+        .plan-tile .tile-meta { margin-top: 0; }
+        .plan-tile .tile-name { font-size: 1.1rem; }
+        .plan-tile .tile-price { font-size: 1.25rem; }
+        .plan-tile .tile-check { display: none; }
+        .booking-panel { padding: 1.15rem; }
+        .calendar { padding: 1rem; }
+        .cal-day { border-radius: 8px; }
+        .field { margin-bottom: 0.9rem; }
+        .field input, .field select, .field textarea { padding: 0.7rem 0.85rem; }
+        .btn { padding: 0.7rem 1.4rem; }
+        .slot-btn { padding: 0.5rem 0.4rem; }
+        .slot-grid { gap: 0.4rem; }
+        .contact-strip { padding: 3rem 0; }
+        .contact-inner { padding: 1.75rem 1.25rem; }
+        .site-footer { padding: 2rem 0; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        html { scroll-behavior: auto; }
+        *, *::before, *::after { animation: none !important; transition: none !important; }
+    }
+</style>
+</head>
+<body>
+
+<header class="site-header" id="top">
+    <div class="container header-inner">
+        <a href="#top" class="logo" aria-label="Revive Rides home">
+            <img src="logo.webp" alt="Revive Rides Auto Detailing" style="height:48px; width:auto;">
+            <span class="logo-word">REVIVE <em>RIDES</em></span>
+        </a>
+
+        <nav class="main-nav" id="main-nav" aria-label="Main navigation">
+            <a href="#services">Services</a>
+            <a href="#why">Why Us</a>
+            <a href="#process">How It Works</a>
+            <a href="#contact">Contact</a>
+            <a href="#booking" class="btn">Book Now <span class="arrow">→</span></a>
+        </nav>
+
+        <button class="nav-toggle" id="nav-toggle" aria-label="Toggle menu" aria-expanded="false" aria-controls="main-nav">
+            <span></span><span></span><span></span>
+        </button>
+    </div>
+</header>
+
+<main>
+
+    <!-- ============ Hero ============ -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-grid">
+                <div>
+                    <span class="hero-badge"><span class="dot"></span> Mobile detailing — we come to you</span>
+                    <h1>We bring the <em>shine straight to your driveway</em></h1>
+                    <p class="hero-sub">Professional exterior, interior, and full detailing packages performed right where your car sits — no drop-off, no waiting rooms, no hassle.</p>
+                    <div class="hero-ctas">
+                        <a href="#booking" class="btn btn-lg">Book Your Detail <span class="arrow">→</span></a>
+                        <a href="#services" class="btn btn-lg btn-ghost">View Packages</a>
+                    </div>
+                    <div class="hero-chips">
+                        <span>Premium products only</span>
+                        <span>Satisfaction guaranteed</span>
+                        <span>Student-owned &amp; operated</span>
+                    </div>
+                </div>
+
+                <div class="hero-visual">
+                    <div class="hero-photos">
+                        <figure class="hero-photo">
+                            <img src="images/team-member-1.png" width="1086" height="1448" alt="Revive Rides team member — lead detail specialist" decoding="async">
+                        </figure>
+                        <figure class="hero-photo">
+                            <img src="images/team-member-2.jpg" width="928" height="1350" alt="Revive Rides team member — interior detail specialist" decoding="async">
+                        </figure>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============ Services ============ -->
+    <section class="services" id="services">
+        <div class="container">
+            <div class="section-head">
+                <span class="kicker">Packages</span>
+                <h2>Choose your detail</h2>
+                <p>Transparent pricing, no upsells at the door. Pick a package, book a time, and we handle the rest.</p>
+            </div>
+
+            <div class="services-grid">
+                <article class="service-card">
+                    <div class="service-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="#00cfff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 11l1.7-4.2A2 2 0 0 1 8.6 5.5h6.8a2 2 0 0 1 1.9 1.3L19 11"/><path d="M4 11h16a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1h-1"/><path d="M3 12v4a1 1 0 0 0 1 1h1"/><circle cx="7.5" cy="17" r="2"/><circle cx="16.5" cy="17" r="2"/><path d="M9.5 17h5M4 11h16"/></svg>
+                    </div>
+                    <h3>Exterior Detail</h3>
+                    <p>Full body wash with ceramic sealant protection that brings the shine back.</p>
+                    <ul class="service-feats">
+                        <li>Full body wash</li>
+                        <li>Protection with ceramic sealant</li>
+                        <li>Wheel &amp; rim cleaning</li>
+                        <li>Windshield &amp; window cleaning</li>
+                    </ul>
+                    <div class="price-row"><span class="price">$89</span><span class="price-note">all cars · ~1 hr</span></div>
+                    <button class="btn card-btn" data-plan="Exterior Detail">View Details <span class="arrow">→</span></button>
+                </article>
+
+                <article class="service-card featured">
+                    <span class="pop-badge">Most Popular</span>
+                    <div class="service-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="#00cfff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 18v-6a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v6"/><path d="M5 10 6.8 5.6A2 2 0 0 1 8.7 4.3h6.6a2 2 0 0 1 1.9 1.3L19 10"/><path d="M4 18h16"/><path d="M7 14h4"/></svg>
+                    </div>
+                    <h3>Premium Interior</h3>
+                    <p>Deep carpet cleaning, stain removal, and a full cabin refresh.</p>
+                    <ul class="service-feats">
+                        <li>Stain removal &amp; deep carpet clean</li>
+                        <li>Thorough cabin &amp; trunk vacuuming</li>
+                        <li>Interior surface clean &amp; UV protection</li>
+                        <li>Complete trash removal</li>
+                    </ul>
+                    <div class="price-row"><span class="price">$119</span><span class="price-note">all cars · ~1.5 hrs</span></div>
+                    <button class="btn card-btn" data-plan="Premium Interior Detail">View Details <span class="arrow">→</span></button>
+                </article>
+
+                <article class="service-card">
+                    <div class="service-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="#00cfff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9L12 3Z"/><path d="M19 15l.9 2.1L22 18l-2.1.9L19 21l-.9-2.1L16 18l2.1-.9L19 15Z"/></svg>
+                    </div>
+                    <h3>Full Auto Detail</h3>
+                    <p>Interior + Exterior — every service in one visit for a like-new finish.</p>
+                    <ul class="service-feats">
+                        <li>Ceramic sealant &amp; full body wash</li>
+                        <li>Deep wheel &amp; rim cleaning</li>
+                        <li>Streak-free window &amp; windshield cleaning</li>
+                        <li>Thorough cabin &amp; trunk vacuuming</li>
+                        <li>Stain removal &amp; deep carpet clean</li>
+                        <li>Interior surface clean &amp; UV protection</li>
+                        <li>Complete trash removal</li>
+                    </ul>
+                    <div class="price-row"><span class="price">$149</span><span class="price-note">all cars · ~2.5 hrs</span></div>
+                    <button class="btn card-btn" data-plan="Full Auto Detail">View Details <span class="arrow">→</span></button>
+                </article>
+            </div>
+
+            <p class="fine-print">Final price is always confirmed before we start.</p>
+        </div>
+    </section>
+
+    <!-- ============ Why us ============ -->
+    <section id="why">
+        <div class="container">
+            <div class="section-head">
+                <span class="kicker">Why Revive Rides</span>
+                <h2>Detailing that fits your day</h2>
+                <p>We built this business around one idea: your car should get cared for while you get on with your life.</p>
+            </div>
+
+            <div class="why-grid">
+                <div class="why-item">
+                    <div class="why-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7h11v10H3zM14 10h4l3 3v4h-7z"/><circle cx="7" cy="19" r="1.6"/><circle cx="17.5" cy="19" r="1.6"/></svg>
+                    </div>
+                    <h3>We come to you</h3>
+                    <p>Home, office, or gym — if there's a spigot and a parking spot, we can detail there.</p>
+                </div>
+                <div class="why-item">
+                    <div class="why-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
+                    </div>
+                    <h3>On-time, every time</h3>
+                    <p>Narrow arrival windows and a text when we're on the way. Your schedule is respected.</p>
+                </div>
+                <div class="why-item">
+                    <div class="why-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6l7-3Z"/><path d="m9 12 2 2 4-4"/></svg>
+                    </div>
+                    <h3>Student owned</h3>
+                    <p>Proudly student owned and operated — local students who take pride in every vehicle we touch.</p>
+                </div>
+                <div class="why-item">
+                    <div class="why-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-4.6-7-10.5C5 7 8 4.5 12 4.5s7 2.5 7 6C19 16.4 12 21 12 21Z"/><path d="m9.5 11.5 1.8 1.8 3.2-3.6"/></svg>
+                    </div>
+                    <h3>Love it or we re-do it</h3>
+                    <p>Not thrilled with a section? Tell us before we leave and we'll make it right on the spot.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============ Process ============ -->
+    <section class="process" id="process">
+        <div class="container">
+            <div class="section-head">
+                <span class="kicker">How it works</span>
+                <h2>Booked in minutes, done by dinner</h2>
+            </div>
+
+            <div class="process-grid">
+                <div class="step">
+                    <div class="step-num">01</div>
+                    <h3>Pick your package &amp; time</h3>
+                    <p>Choose a detailing package below, tell us about your vehicle, and lock in a time slot that works for you.</p>
+                </div>
+                <div class="step">
+                    <div class="step-num">02</div>
+                    <h3>We roll up prepared</h3>
+                    <p>Our fully equipped van arrives on schedule with pro-grade products, tools, and power — just supply the water.</p>
+                </div>
+                <div class="step">
+                    <div class="step-num">03</div>
+                    <h3>Walk around &amp; approve</h3>
+                    <p>We do a final walk-around together so you can inspect the results before we call it done.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============ Water notice ============ -->
+    <section id="prep" aria-label="What to have ready">
+        <div class="container">
+            <div class="water-notice">
+                <div class="notice-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="#00cfff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.7s6.5 7.1 6.5 11.3a6.5 6.5 0 1 1-13 0C5.5 9.8 12 2.7 12 2.7Z"/><path d="M9.5 14a2.5 2.5 0 0 0 2.5 2.5"/></svg>
+                </div>
+                <div>
+                    <h3>Before your appointment</h3>
+                    <p><strong>We use your electricity and water</strong> — please have an accessible outdoor spigot/hose and a working outlet available at your location. <strong>We don't bring our own water or power supply.</strong></p>
+                    <p>Please remove all loose items from your vehicle before your appointment. <strong>Items left in the car could be damaged or ruined during the detailing process.</strong></p>
+                    <p class="pay-note"><strong>We accept Venmo and cash.</strong></p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============ Booking ============ -->
+    <section id="booking">
+        <div class="container">
+            <div class="section-head">
+                <span class="kicker">Booking</span>
+                <h2>Reserve your spot</h2>
+                <p>Pick a package for the full rundown, then send it all to us in one text — takes under a minute.</p>
+            </div>
+
+            <div class="plan-picker" id="plan-picker">
+                <button type="button" class="plan-tile" data-plan="Exterior Detail" aria-pressed="false">
+                    <span class="tile-name">Exterior Detail</span>
+                    <span class="tile-meta"><span>all cars · ~1 hr</span><span class="tile-price">$89</span></span>
+                    <span class="tile-check">✓</span>
+                </button>
+                <button type="button" class="plan-tile" data-plan="Premium Interior Detail" aria-pressed="false">
+                    <span class="tile-name">Premium Interior</span>
+                    <span class="tile-meta"><span>all cars · ~1.5 hrs</span><span class="tile-price">$119</span></span>
+                    <span class="tile-check">✓</span>
+                </button>
+                <button type="button" class="plan-tile" data-plan="Full Auto Detail" aria-pressed="false">
+                    <span class="tile-name">Full Auto Detail</span>
+                    <span class="tile-meta"><span>all cars · ~2.5 hrs</span><span class="tile-price">$149</span></span>
+                    <span class="tile-check">✓</span>
+                </button>
+            </div>
+
+            <div class="booking-panel">
+                <form id="booking-form" novalidate autocomplete="off">
+                    <input type="hidden" id="selected-plan" name="plan" value="">
+
+                    <div class="form-row">
+                        <div class="field">
+                            <label for="customer-name">Your name <span class="req">*</span></label>
+                            <input type="text" id="customer-name" name="name" placeholder="Jane Doe" autocomplete="name">
+                            <p class="form-error" id="customer-name-error" style="display:none">Please enter your name so we know who to ask for.</p>
+                        </div>
+                        <div class="field">
+                            <label for="address">Service address <span class="req">*</span></label>
+                            <input type="text" id="address" name="address" placeholder="123 Main St, Anytown" required>
+                        </div>
+                        <div class="field">
+                            <label for="phone">Your phone number <span class="req">*</span></label>
+                            <input type="tel" id="phone" name="phone" placeholder="(555) 123-4567" required>
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <label>Availability <span class="req">*</span> <span style="color:var(--text-dim);font-weight:400">— pick your day, then choose a time</span></label>
+                        <div class="calendar" id="calendar">
+                            <div class="cal-head">
+                                <button type="button" class="cal-nav" id="cal-prev" aria-label="Previous month">‹</button>
+                                <span class="cal-title" id="cal-title">Month</span>
+                                <button type="button" class="cal-nav" id="cal-next" aria-label="Next month">›</button>
+                            </div>
+                            <div class="cal-grid" id="cal-grid">
+                                <span class="cal-dow">Sun</span><span class="cal-dow">Mon</span><span class="cal-dow">Tue</span><span class="cal-dow">Wed</span><span class="cal-dow">Thu</span><span class="cal-dow">Fri</span><span class="cal-dow">Sat</span>
+                            </div>
+                            <div class="slot-picker" id="slot-picker">
+                                <p class="slot-label" id="slot-label">Available times — pick your day above</p>
+                                <div class="slot-grid" id="slot-grid"></div>
+                            </div>
+                            <p class="cal-window" id="cal-window">Select an available day to see our appointment times.</p>
+                            <div class="cal-legend">
+                                <span><i class="lg-open"></i> Available</span>
+                                <span><i class="lg-sel"></i> Selected</span>
+                                <span><i class="lg-x"></i> Booked</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <label for="vehicle">Vehicle <span style="color:var(--text-dim);font-weight:400">(optional)</span></label>
+                        <input type="text" id="vehicle" name="vehicle" placeholder="2021 Honda CR-V">
+                    </div>
+
+                    <div class="field">
+                        <label for="car-count">Number of Cars</label>
+                        <input type="number" id="car-count" name="car-count" min="1" max="10" step="1" value="1" inputmode="numeric">
+                        <p class="form-note multi-car-notice" id="multi-car-notice" style="display:none; text-align:left; margin-top:0.5rem; color:var(--cyan)">Multi-car discount applied: $10 off per car.</p>
+                    </div>
+
+                    <div class="field-check">
+                        <input type="checkbox" id="pet-hair" name="pet-hair">
+                        <label for="pet-hair">Pet Hair Removal (+$20)</label>
+                    </div>
+
+                    <button type="submit" class="btn btn-lg">Book via Text Message <span class="arrow">→</span></button>
+                    <p class="form-note">Opens your Messages app with everything pre-filled — just hit send. No payment due now.</p>
+                </form>
+            </div>
+
+            <!-- ============ Confirmation link ============ -->
+            <div class="i-booked" id="confirm-link-box" style="display:none">
+                <p class="i-booked-note">Almost done! Open the confirmation link below — or copy it and send it to us — to lock in your slot. The link works once.</p>
+                <p class="i-booked-when" id="confirm-link-when"></p>
+                <div class="confirm-link-row">
+                    <input type="text" id="confirm-link-input" class="confirm-link-input" readonly aria-label="Your unique confirmation link">
+                    <button type="button" class="btn btn-ghost" id="confirm-link-copy">Copy</button>
+                </div>
+                <p class="i-booked-note" style="font-size:0.8rem">The link is also included in the text message — sending it is enough.</p>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- ============ Contact strip ============ -->
+    <section class="contact-strip" id="contact">
+        <div class="container">
+            <div class="contact-inner">
+                <div>
+                    <h2>Questions? Let's talk.</h2>
+                    <p>Unsure which package fits your ride? Give us a shout — honest advice, no pressure.</p>
+                </div>
+                <div class="contact-links">
+                    <a href="tel:+15086659868">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2Z"/></svg>
+                        (508) 665-9868
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+</main>
+
+<footer class="site-footer">
+    <div class="container footer-inner">
+        <div>
+            <p>&copy; <span id="year">2026</span> Revive Rides Auto Detailing. All rights reserved.</p>
+            <p class="footer-note"><svg aria-hidden="true" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24"><path d="M22 10 12 5 2 10l10 5 10-5Z"/><path d="M6 12v5c0 1.7 2.7 3 6 3s6-1.3 6-3v-5"/></svg> Student-owned &amp; operated</p>
+        </div>
+        <div class="footer-links">
+            <a href="#services">Packages</a>
+            <a href="#booking">Book</a>
+            <a href="#prep">Water &amp; Prep</a>
+            <span class="footer-sep" aria-hidden="true">|</span>
+            <a href="#" data-legal="cookie">Cookie Statement</a>
+            <a href="#" data-legal="privacy">Privacy Policy</a>
+            <a href="#" data-legal="ada">ADA Compliance</a>
+            <a href="#" data-legal="terms">Terms of Service</a>
+        </div>
+    </div>
+</footer>
+
+<!-- ============ Plan detail modal ============ -->
+<div class="modal-overlay" id="plan-modal" role="dialog" aria-modal="true" aria-labelledby="modal-plan-name">
+    <div class="modal">
+        <div class="modal-head">
+            <h3 id="modal-plan-name">Plan</h3>
+            <button class="modal-close" id="modal-close" aria-label="Close details">✕</button>
+        </div>
+        <div class="modal-body">
+            <div class="modal-price-row">
+                <span class="modal-price" id="modal-price"></span>
+                <span class="modal-duration" id="modal-duration"></span>
+            </div>
+            <p class="modal-desc" id="modal-desc"></p>
+            <ul class="service-feats" id="modal-feats"></ul>
+            <hr class="modal-divider">
+            <p class="modal-form-title">Ready to lock it in?</p>
+            <button class="btn btn-lg" id="modal-book-btn" style="width:100%">Book This Plan <span class="arrow">→</span></button>
+        </div>
+    </div>
+</div>
+
+<!-- ============ Legal document modal ============ -->
+<div class="modal-overlay" id="legal-modal" role="dialog" aria-modal="true" aria-labelledby="legal-modal-title">
+    <div class="modal legal-modal">
+        <div class="modal-head">
+            <h3 id="legal-modal-title">Legal</h3>
+            <button class="modal-close" id="legal-modal-close" aria-label="Close legal document">✕</button>
+        </div>
+        <div class="modal-body">
+            <div class="legal-copy" id="legal-copy"></div>
+        </div>
+    </div>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite">
+    <span class="toast-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#00cfff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m5 13 4 4L19 7"/></svg>
+    </span>
+    <span id="toast-msg">Request received — we'll text you to confirm shortly!</span>
+</div>
+
+<script>
+    (function () {
+        'use strict';
+
+        /* Footer year */
+        document.getElementById('year').textContent = new Date().getFullYear();
+
+        /* Sticky header state */
+        var header = document.querySelector('.site-header');
+        function onScroll() {
+            header.classList.toggle('scrolled', window.scrollY > 8);
+        }
+        window.addEventListener('scroll', onScroll, { passive: true });
+        onScroll();
+
+        /* Mobile nav */
+        var toggle = document.getElementById('nav-toggle');
+        var nav = document.getElementById('main-nav');
+        toggle.addEventListener('click', function () {
+            var open = nav.classList.toggle('open');
+            toggle.classList.toggle('open', open);
+            toggle.setAttribute('aria-expanded', String(open));
+        });
+        nav.addEventListener('click', function (e) {
+            if (e.target.closest('a')) {
+                nav.classList.remove('open');
+                toggle.classList.remove('open');
+                toggle.setAttribute('aria-expanded', 'false');
+            }
+        });
+
+        /* Plan data */
+        var PLANS = {
+            'Exterior Detail': {
+                price: '$89',
+                duration: 'all cars · ~1 hr',
+                desc: 'Full body wash with ceramic sealant protection that brings the shine back.',
+                feats: ['Full body wash', 'Protection with ceramic sealant', 'Wheel & rim cleaning', 'Windshield & window cleaning']
+            },
+            'Premium Interior Detail': {
+                price: '$119',
+                duration: 'all cars · ~1.5 hrs',
+                desc: 'Deep carpet cleaning, stain removal, and a full cabin refresh.',
+                feats: ['Stain removal & deep carpet clean', 'Thorough cabin & trunk vacuuming', 'Interior surface clean & UV protection', 'Complete trash removal']
+            },
+            'Full Auto Detail': {
+                price: '$149',
+                duration: 'all cars · ~2.5 hrs',
+                desc: 'Interior + Exterior — every service in one visit for a like-new finish.',
+                feats: ['Ceramic sealant & full body wash', 'Deep wheel & rim cleaning', 'Streak-free window & windshield cleaning', 'Thorough cabin & trunk vacuuming', 'Stain removal & deep carpet clean', 'Interior surface clean & UV protection', 'Complete trash removal']
+            }
+        };
+
+        /* Plan picker */
+        var planInput = document.getElementById('selected-plan');
+        var planTiles = document.querySelectorAll('.plan-tile');
+        function selectPlan(name) {
+            planInput.value = name;
+            planTiles.forEach(function (t) {
+                var on = t.getAttribute('data-plan') === name;
+                t.classList.toggle('selected', on);
+                t.setAttribute('aria-pressed', String(on));
+            });
+        }
+        planTiles.forEach(function (tile) {
+            tile.addEventListener('click', function () {
+                selectPlan(tile.getAttribute('data-plan'));
+            });
+        });
+
+        /* Plan detail modal */
+        var modal = document.getElementById('plan-modal');
+        var currentModalPlan = null;
+        function openModal(name) {
+            var p = PLANS[name];
+            if (!p) return;
+            currentModalPlan = name;
+            document.getElementById('modal-plan-name').textContent = name;
+            document.getElementById('modal-price').textContent = p.price;
+            document.getElementById('modal-duration').textContent = p.duration;
+            document.getElementById('modal-desc').textContent = p.desc;
+            var feats = document.getElementById('modal-feats');
+            feats.innerHTML = '';
+            p.feats.forEach(function (f) {
+                var li = document.createElement('li');
+                li.textContent = f;
+                feats.appendChild(li);
+            });
+            modal.classList.add('open');
+            document.body.style.overflow = 'hidden';
+        }
+        function closeModal() {
+            modal.classList.remove('open');
+            document.body.style.overflow = '';
+        }
+        document.querySelectorAll('.card-btn').forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                openModal(btn.getAttribute('data-plan'));
+            });
+        });
+        document.getElementById('modal-close').addEventListener('click', closeModal);
+        modal.addEventListener('click', function (e) { if (e.target === modal) closeModal(); });
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape' && modal.classList.contains('open')) closeModal();
+        });
+        document.getElementById('modal-book-btn').addEventListener('click', function () {
+            if (currentModalPlan) selectPlan(currentModalPlan);
+            closeModal();
+            document.getElementById('booking').scrollIntoView({ behavior: 'smooth' });
+        });
+
+        /* ============ Legal document modal ============ */
+        /* The four documents below (Privacy Policy, Cookie Policy, Terms of
+           Service, Accessibility Statement) are rendered verbatim in the
+           modal. Business details (effective date, contact email/phone,
+           cancellation policy, governing law) are filled in — have an
+           attorney review all legal text before publishing. */
+        var legalModal = document.getElementById('legal-modal');
+        function closeLegal() {
+            legalModal.classList.remove('open');
+            document.body.style.overflow = '';
+        }
+        var LEGAL_DOCS = {
+            privacy: {
+                title: 'Privacy Policy',
+                body: [
+                    '<p class="legal-effective">Effective Date: September 10, 2026</p>',
+                    '<p>Revive Rides Auto Detailing ("we," "us," or "our") operates this website (the "Site") to allow visitors to schedule mobile auto detailing appointments. This Privacy Policy explains what information we collect, how we use it, and your choices.</p>',
+                    '<h4>1. Information We Collect</h4>',
+                    '<p>When you use this Site to book an appointment, we may collect:</p>',
+                    '<ul><li>Your name, phone number, and email address</li><li>Your service address (so we know where to bring the crew)</li><li>Appointment date, time, and selected service package</li><li>Basic technical data (browser type, device type, pages visited) collected automatically via cookies or similar technologies</li></ul>',
+                    '<p>We do not collect or store payment information on this Site. No orders or payments are processed here — payment, if applicable, is handled separately at the time of service.</p>',
+                    '<h4>2. How We Use Your Information</h4>',
+                    '<p>We use the information collected to:</p>',
+                    '<ul><li>Schedule and confirm your appointment</li><li>Communicate with you about your booking (confirmations, reminders, changes)</li><li>Improve the Site and our scheduling process</li><li>Comply with legal obligations</li></ul>',
+                    '<h4>3. Cookies</h4>',
+                    '<p>This Site may use cookies and similar technologies to operate the booking feature and understand how visitors use the Site. See our Cookie Statement for details.</p>',
+                    '<h4>4. Use of AI Tools</h4>',
+                    '<p>This website was designed and developed with the assistance of artificial intelligence (AI) tools. AI was used to help generate portions of the site\'s code, layout, and written content during development.</p>',
+                    '<p>No AI system is used to automatically process, evaluate, or make decisions about your personal information when you use this Site. Booking requests are reviewed and confirmed manually by our team, not by an automated system.</p>',
+                    '<p>If this changes in the future — for example, if an AI-powered chat assistant or automated decision-making feature is added to the Site — this policy will be updated to disclose that use specifically.</p>',
+                    '<h4>5. Data Sharing</h4>',
+                    '<p>We do not sell your personal information. We share booking information only as needed to provide our services, or as required by law.</p>',
+                    '<h4>6. Data Retention</h4>',
+                    '<p>We retain booking information for as long as necessary to provide our services and meet legal, accounting, or reporting requirements.</p>',
+                    '<h4>7. Your Rights</h4>',
+                    '<p>Depending on your state of residence, you may have rights to access, correct, or delete your personal information. To make a request, contact us using the information below.</p>',
+                    '<h4>8. Children\'s Privacy</h4>',
+                    '<p>This Site is not directed at children under 13, and we do not knowingly collect information from children.</p>',
+                    '<h4>9. Changes to This Policy</h4>',
+                    '<p>We may update this Privacy Policy from time to time. Changes will be posted on this page with an updated effective date.</p>',
+                    '<h4>10. Contact Us</h4>',
+                    '<p>Questions about this Privacy Policy can be directed to:<br>(508) 665-9868</p>'
+                ].join('')
+            },
+            cookie: {
+                title: 'Cookie Statement',
+                body: [
+                    '<p class="legal-effective">Effective Date: September 10, 2026</p>',
+                    '<p>This Cookie Policy explains how Revive Rides Auto Detailing ("we," "us," or "our") uses cookies and similar technologies on this website (the "Site").</p>',
+                    '<h4>1. What Are Cookies</h4>',
+                    '<p>Cookies are small text files placed on your device when you visit a website. They help the site function properly and can also be used to understand how visitors use the site.</p>',
+                    '<h4>2. How We Use Cookies</h4>',
+                    '<p>We use cookies for the following purposes:</p>',
+                    '<ul><li><strong>Essential cookies:</strong> required for core site functionality, including the booking feature</li><li><strong>Analytics cookies:</strong> help us understand how visitors interact with the Site so we can improve it</li></ul>',
+                    '<h4>3. Your Cookie Choices</h4>',
+                    '<p>Most browsers let you control cookies through their settings, including blocking or deleting them. Note that disabling essential cookies may prevent the booking feature from working correctly.</p>',
+                    '<p>If this Site displays a cookie consent banner, your choices there will determine which non-essential cookies are set on your first visit.</p>',
+                    '<h4>4. Changes to This Policy</h4>',
+                    '<p>We may update this Cookie Policy periodically. Changes will be posted here with a new effective date.</p>',
+                    '<h4>5. Contact Us</h4>',
+                    '<p>Questions about this Cookie Statement can be directed to:<br>(508) 665-9868</p>'
+                ].join('')
+            },
+            terms: {
+                title: 'Terms of Service',
+                body: [
+                    '<p class="legal-effective">Effective Date: September 10, 2026</p>',
+                    '<p>Please read these Terms of Service ("Terms") carefully before using this website (the "Site"), operated by Revive Rides Auto Detailing ("we," "us," or "our"). By using the Site, you agree to these Terms.</p>',
+                    '<h4>1. Purpose of This Site</h4>',
+                    '<p>This Site is provided solely to allow visitors to schedule mobile auto detailing appointments. No products are sold, and no payments are processed through this Site.</p>',
+                    '<h4>2. Use of AI Tools</h4>',
+                    '<p>This website was designed and developed with the assistance of artificial intelligence (AI) tools. AI was used to help generate portions of the site\'s code, layout, and written content during development.</p>',
+                    '<p>No AI system is used to automatically process, evaluate, or make decisions about your personal information when you use this Site. Booking requests are reviewed and confirmed manually by our team, not by an automated system.</p>',
+                    '<p>If this changes in the future — for example, if an AI-powered chat assistant or automated decision-making feature is added to the Site — this policy will be updated to disclose that use specifically.</p>',
+                    '<h4>3. Booking Appointments</h4>',
+                    '<p>When you book an appointment through the Site, you agree to:</p>',
+                    '<ul><li>Provide accurate contact and location information</li><li>Have an accessible outdoor water spigot/hose available at the service location, as we use your water supply and do not bring our own</li><li>Provide a reasonably clear and safe space for us to work on your vehicle</li></ul>',
+                    '<h4>4. Cancellations and Rescheduling</h4>',
+                    '<p>Appointments may be canceled or rescheduled free of charge with at least 24 hours\' notice by contacting us at (508) 665-9868. Cancellations made with less than 24 hours\' notice, or missed appointments, may forfeit the booked time slot, since the crew can only complete one detail job per day.</p>',
+                    '<h4>5. Our Right to Cancel</h4>',
+                    '<p>We reserve the right to cancel or reschedule any appointment at our discretion, including but not limited to situations involving unsafe weather conditions, inaccessible or unsafe service locations, inaccurate booking information, or other circumstances beyond our reasonable control. We will make a reasonable effort to notify you as soon as possible if we need to cancel or reschedule, and to offer an alternative time.</p>',
+                    '<h4>6. No Guarantee of Availability</h4>',
+                    '<p>Booking a time slot through the Site does not guarantee service if information provided is inaccurate, if weather or safety conditions prevent us from completing the job, or if the location is inaccessible.</p>',
+                    '<h4>7. Service Disclaimers</h4>',
+                    '<p>We take reasonable care with every vehicle, but we are not responsible for:</p>',
+                    '<ul><li>Pre-existing damage, wear, or defects on your vehicle</li><li>Loose or aftermarket parts, trim, or accessories not properly secured</li><li>Personal items left in or on the vehicle prior to service</li></ul>',
+                    '<h4>8. Limitation of Liability</h4>',
+                    '<p>To the fullest extent permitted by law, Revive Rides Auto Detailing is not liable for indirect, incidental, or consequential damages arising from use of this Site or our services, beyond the amount paid for the specific service in question.</p>',
+                    '<h4>9. Intellectual Property</h4>',
+                    '<p>All content on this Site, including the Revive Rides Auto Detailing name, logo, and design, is owned by us and may not be used without permission.</p>',
+                    '<h4>10. Changes to These Terms</h4>',
+                    '<p>We may update these Terms from time to time. Continued use of the Site after changes means you accept the updated Terms.</p>',
+                    '<h4>11. Governing Law</h4>',
+                    '<p>These Terms are governed by the laws of the State of Massachusetts, without regard to conflict-of-law principles.</p>',
+                    '<h4>12. Contact Us</h4>',
+                    '<p>Questions about these Terms can be directed to:<br>(508) 665-9868</p>'
+                ].join('')
+            },
+            ada: {
+                title: 'ADA Compliance',
+                body: [
+                    '<p class="legal-effective">Effective Date: September 10, 2026</p>',
+                    '<p>Revive Rides Auto Detailing is committed to ensuring digital accessibility for people of all abilities. We are continually improving the user experience for everyone and applying relevant accessibility standards.</p>',
+                    '<h4>1. Our Commitment</h4>',
+                    '<p>We aim for this website to conform to the Web Content Accessibility Guidelines (WCAG) 2.1, Level AA, as a general standard of accessibility.</p>',
+                    '<h4>2. Measures We Take</h4>',
+                    '<ul><li>Using clear, readable text with sufficient color contrast</li><li>Providing descriptive text alternatives for images (including our logo)</li><li>Ensuring the site is navigable by keyboard</li><li>Structuring content with clear headings for screen readers</li></ul>',
+                    '<h4>3. Known Limitations</h4>',
+                    '<p>We are actively working to identify and correct any accessibility barriers on this Site. If you encounter any difficulty accessing content or using the booking feature, please let us know.</p>',
+                    '<h4>4. Feedback</h4>',
+                    '<p>We welcome your feedback on the accessibility of this Site. If you encounter a barrier or have suggestions, please contact us:<br>(508) 665-9868</p>',
+                    '<p>We try to respond to accessibility feedback within a reasonable timeframe and will work to address issues raised.</p>'
+                ].join('')
+            }
+        };
+        var legalCopy = document.getElementById('legal-copy');
+        function openLegal(key) {
+            var doc = LEGAL_DOCS[key];
+            if (!doc) return;
+            document.getElementById('legal-modal-title').textContent = doc.title;
+            legalCopy.innerHTML = doc.body;
+            legalModal.classList.add('open');
+            document.body.style.overflow = 'hidden';
+        }
+        document.querySelectorAll('[data-legal]').forEach(function (link) {
+            link.addEventListener('click', function (e) {
+                e.preventDefault();
+                openLegal(link.getAttribute('data-legal'));
+            });
+        });
+        document.getElementById('legal-modal-close').addEventListener('click', closeLegal);
+        legalModal.addEventListener('click', function (e) { if (e.target === legalModal) closeLegal(); });
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape' && legalModal.classList.contains('open')) closeLegal();
+        });
+
+        /* ============ Availability calendar ============
+           SCHEDULE (recurring):
+           - Mon–Thu: single slot, 4 times — 3:30 PM, 3:45 PM, 4:00 PM, 4:15 PM
+           - Friday: single slot, 2 times — 4:45 PM, 5:00 PM
+           - Sat + Sun: three independent slots (Morning ×5, Early
+             afternoon ×3, Late afternoon ×2) — all open at once
+           /* OWNER LIST: add fully-booked days here as 'YYYY-MM-DD'
+           (e.g. '2026-09-15') to x them out for every visitor — the crew
+           completes one detail job per day. Bookings made on a device x-out
+           that whole day automatically there. */
+        var OWNER_BOOKED = [
+            '2026-09-19',
+            '2026-09-20'
+        ];
+
+        /* ---- Owner-blocked dates (specific 2026 dates only) ----
+           FULLY_BLOCKED_DATES: entire day is unavailable — rendered with the
+           same red ✕ strike-through as booked days.
+           PARTIAL_DAY_OPEN_SLOTS: for a date where only certain slots stay
+           bookable, list the ONLY open slot labels; every other slot that
+           day is blocked. Dates are full YYYY-MM-DD keys, so other years
+           are never affected, and the recurring weekday/Saturday schedule
+           itself is untouched. */
+        var FULLY_BLOCKED_DATES = [
+            '2026-10-02',
+            '2026-10-03',
+            '2026-10-04'
+        ];
+
+        var PARTIAL_DAY_OPEN_SLOTS = {
+            '2026-10-17': ['1:00 PM', '1:15 PM', '1:30 PM'] // early-afternoon slot only
+        };
+
+        function isFullyBlocked(key) {
+            return FULLY_BLOCKED_DATES.indexOf(key) !== -1;
+        }
+
+        function isSlotBlocked(key, label) {
+            if (isFullyBlocked(key)) return true;
+            var openSlots = PARTIAL_DAY_OPEN_SLOTS[key];
+            return openSlots ? openSlots.indexOf(label) === -1 : false;
+        }
+
+        /* Fixed appointment times — the only bookable start times.
+           MON_THU_TIMES applies Monday–Thursday; FRIDAY_TIMES applies to
+           Friday; SATURDAY_TIMES applies to Saturday/Sunday (the three
+           independent slot groups below). */
+        var MON_THU_TIMES = ['3:30 PM', '3:45 PM', '4:00 PM', '4:15 PM'];
+        var FRIDAY_TIMES = ['4:45 PM', '5:00 PM'];
+        var SATURDAY_TIMES = ['8:30 AM', '8:45 AM', '9:00 AM', '9:15 AM', '9:30 AM', '1:00 PM', '1:15 PM', '1:30 PM', '4:45 PM', '5:00 PM'];
+
+        /* Bookings must be made at least 24 hours before the appointment
+           time. Slots less than 24 hours away (measured to the appointment
+           start, minute-for-minute) are shown disabled with a distinct
+           'Requires 24hr notice' status — separate from Booked/Unavailable. */
+        var CUTOFF_MS = 24 * 60 * 60 * 1000;
+
+        function slotTimeMs(d) {
+            return new Date(d.y, d.m, d.d).getTime() + parseTimeLabel(d.time);
+        }
+
+        /* '4:45 PM' -> minutes from midnight (NaN when unparseable —
+           fail open so a bad label never silently kills a slot). */
+        function parseTimeLabel(label) {
+            var parts = (label || '').trim().split(/\s+/);
+            var hm = (parts[0] || '').split(':');
+            var h = parseInt(hm[0], 10);
+            var min = hm.length > 1 ? parseInt(hm[1], 10) : 0;
+            var ap = (parts[1] || '').toUpperCase();
+            if (isNaN(h) || isNaN(min) || (ap !== 'AM' && ap !== 'PM')) return NaN;
+            if (ap === 'AM' && h === 12) h = 0;
+            if (ap === 'PM' && h !== 12) h += 12;
+            return (h * 60 + min) * 60 * 1000;
+        }
+
+        /* True when this date + slot time is inside the 24-hour window.
+           Uses Date.now() at call time so it stays correct as time passes. */
+        function isWithinCutoff(d) {
+            var t = slotTimeMs(d);
+            if (isNaN(t)) return false;
+            return Date.now() >= t - CUTOFF_MS;
+        }
+
+        var MONTH_NAMES = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+
+        function pad2(n) { return (n < 10 ? '0' : '') + n; }
+        function dateKey(y, m, d) { return y + '-' + pad2(m + 1) + '-' + pad2(d); }
+
+        var today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        /* ---- Booked days (shared server state) ----
+           The server holds the one source of truth in its memory; every
+           visitor polls /api/availability and sees the same calendar.
+           Nothing is stored in localStorage, sessionStorage, or cookies,
+           and no customer details exist anywhere in this page. */
+        var SERVER_BOOKED = [];
+        var SERVER_BOOKED_SLOTS = {};
+
+        function isBooked(key) {
+            return OWNER_BOOKED.indexOf(key) !== -1 || SERVER_BOOKED.indexOf(key) !== -1;
+        }
+
+        function refreshAvailability() {
+            fetch('/api/availability').then(function (r) { return r.json(); }).then(function (d) {
+                if (!d || !Array.isArray(d.bookedDays)) return;
+                var before = SERVER_BOOKED.join(',');
+                var beforeSlots = JSON.stringify(SERVER_BOOKED_SLOTS);
+                SERVER_BOOKED = d.bookedDays;
+                SERVER_BOOKED_SLOTS = d.bookedSlots || {};
+                if (SERVER_BOOKED.join(',') !== before || JSON.stringify(SERVER_BOOKED_SLOTS) !== beforeSlots) {
+                    renderCal();
+                    renderSlots();
+                }
+            }).catch(function () { /* server briefly unreachable — keep last known state */ });
+        }
+        refreshAvailability();
+        setInterval(refreshAvailability, 5000);
+
+        var calViewYear = today.getFullYear();
+        var calViewMonth = today.getMonth();
+        var selectedDate = null;
+        var selectedTime = null;
+
+        var calTitle = document.getElementById('cal-title');
+        var calGrid = document.getElementById('cal-grid');
+        var calWindow = document.getElementById('cal-window');
+        var slotGrid = document.getElementById('slot-grid');
+        var slotLabel = document.getElementById('slot-label');
+
+        /* ---- Weekend slot groups (mirror of WEEKEND_SLOT_GROUPS in
+           server.js — keep both in sync). Saturday/Sunday run three
+           independent slots: Morning (5 times), Early afternoon (3)
+           and Late afternoon (2). All slots are bookable at once in
+           any order. Booking one time closes out its own slot only;
+           the day crosses off when all three slots have been used. */
+        var WEEKEND_SLOT_GROUPS = [
+            { name: 'Morning',         times: ['8:30 AM', '8:45 AM', '9:00 AM', '9:15 AM', '9:30 AM'] },
+            { name: 'Early afternoon', times: ['1:00 PM', '1:15 PM', '1:30 PM'] },
+            { name: 'Late afternoon',  times: ['4:45 PM', '5:00 PM'] }
+        ];
+
+        function timesForDow(dow) {
+            if (dow >= 1 && dow <= 4) return MON_THU_TIMES;
+            if (dow === 5) return FRIDAY_TIMES;
+            return SATURDAY_TIMES;
+        }
+
+        function slotGroupOf(label) {
+            for (var i = 0; i < WEEKEND_SLOT_GROUPS.length; i++) {
+                if (WEEKEND_SLOT_GROUPS[i].times.indexOf(label) !== -1) return i;
+            }
+            return -1;
+        }
+
+        /* Compact label for a slot time: '9:00 AM' -> '9 AM',
+           '1:30 PM' -> '1:30 PM' (minutes only when non-zero). */
+        function compactTime(label) {
+            var parts = label.split(' ');
+            var hm = (parts[0] || '').split(':');
+            var h = parseInt(hm[0], 10);
+            var min = hm.length > 1 ? hm[1] : '00';
+            var ap = parts.length > 1 ? parts[1] : '';
+            if (isNaN(h)) return label;
+            return (min === '00' ? h + ' ' : h + ':' + min + ' ') + ap;
+        }
+
+        /* Time-range sublabel for a slot group, e.g. '9 AM – 10 AM' —
+           derived from the group's own first/last times so it can never
+           drift out of sync with the bookable list. */
+        function slotRange(g) {
+            if (!g.times.length) return '';
+            return compactTime(g.times[0]) + ' \u2013 ' + compactTime(g.times[g.times.length - 1]);
+        }
+
+        /* True when a slot still has bookable times: unused and not
+           fully owner-blocked (server is the source of truth). */
+        function slotIsOpen(key, slotIdx) {
+            var booked = SERVER_BOOKED_SLOTS[key] || [];
+            var g = WEEKEND_SLOT_GROUPS[slotIdx];
+            var ownerOpen = false;
+            for (var j = 0; j < g.times.length; j++) {
+                if (booked.indexOf(g.times[j]) !== -1) return false;
+                if (!isSlotBlocked(key, g.times[j])) ownerOpen = true;
+            }
+            return ownerOpen;
+        }
+
+        /* True when a slot actually has a confirmed booking (vs merely
+           being owner-closed). Drives the header check mark. */
+        function slotHasBooking(key, slotIdx) {
+            var booked = SERVER_BOOKED_SLOTS[key] || [];
+            var g = WEEKEND_SLOT_GROUPS[slotIdx];
+            for (var j = 0; j < g.times.length; j++) {
+                if (booked.indexOf(g.times[j]) !== -1) return true;
+            }
+            return false;
+        }
+
+        function renderSlots() {
+            slotGrid.innerHTML = '';
+            if (!selectedDate) {
+                slotLabel.textContent = 'Available times — pick your day above';
+                return;
+            }
+            var dayIsBooked = isBooked(selectedDate.key) || isFullyBlocked(selectedDate.key);
+            var times = timesForDow(selectedDate.dow);
+            slotLabel.textContent = 'Available times — ' + prettyDate(selectedDate.y, selectedDate.m, selectedDate.d);
+            var isWeekend = selectedDate.dow === 0 || selectedDate.dow === 6;
+            var lastGroupRendered = -1;
+            times.forEach(function (label) {
+                var s = document.createElement('button');
+                s.type = 'button';
+                s.className = 'slot-btn';
+                var gIdx = slotGroupOf(label);
+                var withinCutoff = isWithinCutoff({ y: selectedDate.y, m: selectedDate.m, d: selectedDate.d, time: label });
+                if (isWeekend && gIdx !== -1 && lastGroupRendered !== gIdx) {
+                    /* Full-width group header row before each weekend slot group:
+                       open slots are cyan; slots with a confirmed booking get a
+                       check; owner-closed slots stay plain. */
+                    lastGroupRendered = gIdx;
+                    var open = slotIsOpen(selectedDate.key, gIdx);
+                    var hasBooking = slotHasBooking(selectedDate.key, gIdx);
+                    var h = document.createElement('p');
+                    h.className = 'slot-group-header' + (open ? ' slot-group-open' : '');
+                    h.innerHTML = '<span class="slot-group-name">'
+                        + (hasBooking ? '<span class="slot-group-check" aria-hidden="true">\u2713</span>' : '')
+                        + WEEKEND_SLOT_GROUPS[gIdx].name + '</span>'
+                        + '<span class="slot-group-range">' + slotRange(WEEKEND_SLOT_GROUPS[gIdx]) + '</span>';
+                    slotGrid.appendChild(h);
+                }
+                var slotAlreadyUsed = isWeekend && gIdx !== -1 && !slotIsOpen(selectedDate.key, gIdx);
+                if (dayIsBooked) {
+                    s.disabled = true;
+                    s.innerHTML = label + ' <span class="slot-status">Booked</span>';
+                    s.setAttribute('aria-label', label + ' — booked');
+                } else if (isSlotBlocked(selectedDate.key, label)) {
+                    s.disabled = true;
+                    s.innerHTML = label + ' <span class="slot-status">Unavailable</span>';
+                    s.setAttribute('aria-label', label + ' — unavailable');
+                } else if (withinCutoff) {
+                    /* Too soon to book: distinct look from Booked (no red
+                       tint) and from Unavailable (no dashed border). */
+                    s.disabled = true;
+                    s.classList.add('cutoff');
+                    s.innerHTML = label + ' <span class="slot-status">Requires 24hr notice</span>';
+                    s.setAttribute('aria-label', label + ' — requires 24hr notice');
+                } else if (slotAlreadyUsed) {
+                    /* This slot already has a confirmed booking (or is fully
+                       owner-blocked) — its other times are taken. Other slots
+                       remain independently open. */
+                    s.disabled = true;
+                    s.innerHTML = label + ' <span class="slot-status">Booked</span>';
+                    s.setAttribute('aria-label', label + ' — booked');
+                } else {
+                    if (selectedTime === label) s.classList.add('selected');
+                    s.innerHTML = label + ' <span class="slot-status">Open</span>';
+                    s.addEventListener('click', function () {
+                        selectedTime = label;
+                        calWindow.textContent = 'You picked ' + label + ' on ' + prettyDate(selectedDate.y, selectedDate.m, selectedDate.d) + '.';
+                        renderSlots();
+                    });
+                }
+                slotGrid.appendChild(s);
+            });
+        }
+
+        function prettyDate(y, m, d) {
+            var dows = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+            return dows[new Date(y, m, d).getDay()] + ', ' + MONTH_NAMES[m] + ' ' + d + ', ' + y;
+        }
+
+        function renderCal() {
+            calTitle.textContent = MONTH_NAMES[calViewMonth] + ' ' + calViewYear;
+
+            while (calGrid.children.length > 7) calGrid.removeChild(calGrid.lastChild);
+
+            var first = new Date(calViewYear, calViewMonth, 1);
+            var daysInMonth = new Date(calViewYear, calViewMonth + 1, 0).getDate();
+
+            for (var e = 0; e < first.getDay(); e++) {
+                var blank = document.createElement('span');
+                blank.className = 'cal-day empty';
+                calGrid.appendChild(blank);
+            }
+
+            for (var d = 1; d <= daysInMonth; d++) {
+                (function (d) {
+                    var btn = document.createElement('button');
+                    btn.type = 'button';
+                    btn.className = 'cal-day';
+                    btn.textContent = d;
+                    var key = dateKey(calViewYear, calViewMonth, d);
+                    var thisDate = new Date(calViewYear, calViewMonth, d);
+                    var dow = thisDate.getDay();
+                    var timesToday = timesForDow(dow);
+                    var allCutoff = true;
+                    for (var t = 0; t < timesToday.length; t++) {
+                        if (!isWithinCutoff({ y: calViewYear, m: calViewMonth, d: d, time: timesToday[t] })) { allCutoff = false; break; }
+                    }
+
+                    if (thisDate.getTime() === today.getTime()) {
+                        btn.classList.add('today');
+                    }
+
+                    if (thisDate < today) {
+                        btn.classList.add('past');
+                        btn.disabled = true;
+                    } else if (isBooked(key) || isFullyBlocked(key)) {
+                        btn.classList.add('booked');
+                        btn.disabled = true;
+                        btn.setAttribute('aria-label', key + ' \u2014 ' + (isBooked(key) ? 'booked' : 'unavailable'));
+                    } else if (allCutoff) {
+                        /* Every slot today is inside the 24-hour window —
+                           shown like a closed day, but NOT red-tinted like
+                           booked days. Individual slots still explain why. */
+                        btn.classList.add('closed');
+                        btn.disabled = true;
+                        btn.setAttribute('aria-label', key + ' — requires 24hr notice');
+                    } else {
+                        btn.setAttribute('aria-label', key + ' \u2014 available');
+                        btn.addEventListener('click', function () {
+                            selectedDate = { y: calViewYear, m: calViewMonth, d: d, key: key, dow: dow };
+                            selectedTime = null;
+                            calGrid.querySelectorAll('.cal-day.selected').forEach(function (el) { el.classList.remove('selected'); });
+                            btn.classList.add('selected');
+                            renderSlots();
+                            calWindow.textContent = 'Now pick an appointment time below.';
+                        });
+                    }
+
+                    if (selectedDate && selectedDate.key === key) btn.classList.add('selected');
+                    calGrid.appendChild(btn);
+                })(d);
+            }
+        }
+
+        document.getElementById('cal-prev').addEventListener('click', function () {
+            calViewMonth--;
+            if (calViewMonth < 0) { calViewMonth = 11; calViewYear--; }
+            renderCal();
+        });
+
+        document.getElementById('cal-next').addEventListener('click', function () {
+            calViewMonth++;
+            if (calViewMonth > 11) { calViewMonth = 0; calViewYear++; }
+            renderCal();
+        });
+
+        renderCal();
+        renderSlots();
+
+        /* Re-check the 24-hour cutoff every 30 seconds so a slot that
+           crosses into the window disables itself without a refresh. */
+        setInterval(function () {
+            renderCal();
+            renderSlots();
+        }, 30000);
+
+
+
+
+
+        /* Toast */
+        var toast = document.getElementById('toast');
+        var toastMsg = document.getElementById('toast-msg');
+        var toastTimer;
+        function showToast(message) {
+            toastMsg.textContent = message;
+            toast.classList.add('show');
+            window.clearTimeout(toastTimer);
+            toastTimer = window.setTimeout(function () { toast.classList.remove('show'); }, 5000);
+        }
+
+        /* Booking form */
+        var form = document.getElementById('booking-form');
+        form.addEventListener('submit', function (e) { e.preventDefault(); submitBooking(); });
+
+        /* Multi-car discount notice — shows only at 3+ cars, never for 1–2. */
+        var carCountInput = document.getElementById('car-count');
+        var multiCarNotice = document.getElementById('multi-car-notice');
+        function updateMultiCarNotice() {
+            var n = parseInt(carCountInput.value, 10);
+            if (n >= 3) {
+                multiCarNotice.textContent = 'Multi-car discount applied: $10 off per car (' + n + ' cars).';
+                multiCarNotice.style.display = '';
+            } else {
+                multiCarNotice.style.display = 'none';
+            }
+        }
+        carCountInput.addEventListener('input', updateMultiCarNotice);
+
+        async function submitBooking() {
+            /* Name is validated first, with its own inline error. */
+            var customerName = document.getElementById('customer-name');
+            var nameError = document.getElementById('customer-name-error');
+            function clearNameError() {
+                customerName.style.borderColor = '';
+                nameError.style.display = 'none';
+            }
+            customerName.addEventListener('input', clearNameError);
+            if (!customerName.value.trim()) {
+                customerName.focus();
+                customerName.style.borderColor = '#ff5a6e';
+                nameError.style.display = '';
+                showToast('Please enter your name to book your slot.');
+                document.getElementById('customer-name').scrollIntoView({ behavior: 'smooth', block: 'center' });
+                return;
+            }
+            var required = form.querySelectorAll('[required]');
+            for (var i = 0; i < required.length; i++) {
+                if (!required[i].value.trim()) {
+                    required[i].focus();
+                    showToast('Please fill in the highlighted fields so we can confirm your slot.');
+                    required[i].style.borderColor = '#ff5a6e';
+                    (function (el) {
+                        el.addEventListener('input', function handler() {
+                            el.style.borderColor = '';
+                            el.removeEventListener('input', handler);
+                        });
+                    })(required[i]);
+                    return;
+                }
+            }
+            if (!planInput.value) {
+                showToast('Pick a package first — tap one of the plans above.');
+                document.getElementById('plan-picker').scrollIntoView({ behavior: 'smooth', block: 'center' });
+                return;
+            }
+            if (!selectedDate) {
+                showToast('Pick a day on the availability calendar first.');
+                document.getElementById('calendar').scrollIntoView({ behavior: 'smooth', block: 'center' });
+                return;
+            }
+            if (isBooked(selectedDate.key)) {
+                showToast('That day was just booked — please pick another day.');
+                document.getElementById('calendar').scrollIntoView({ behavior: 'smooth', block: 'center' });
+                return;
+            }
+            if (isFullyBlocked(selectedDate.key)) {
+                showToast('That day is not available — please pick another day.');
+                document.getElementById('calendar').scrollIntoView({ behavior: 'smooth', block: 'center' });
+                return;
+            }
+            if (!selectedTime) {
+                showToast('Choose one of the available appointment times for your selected day.');
+                document.getElementById('slot-picker').scrollIntoView({ behavior: 'smooth', block: 'center' });
+                return;
+            }
+            if (isSlotBlocked(selectedDate.key, selectedTime)) {
+                showToast('That time is not available — please pick another slot.');
+                document.getElementById('slot-picker').scrollIntoView({ behavior: 'smooth', block: 'center' });
+                return;
+            }
+            /* 24-hour rule, re-checked at submit in case the window closed
+               after the visitor picked this slot. */
+            if (isWithinCutoff({ y: selectedDate.y, m: selectedDate.m, d: selectedDate.d, time: selectedTime })) {
+                renderSlots();
+                showToast('That time is too soon — bookings need at least 24 hours notice. Please pick another slot.');
+                document.getElementById('slot-picker').scrollIntoView({ behavior: 'smooth', block: 'center' });
+                return;
+            }
+            if (selectedDate.dow === 0 || selectedDate.dow === 6) {
+                /* Weekend days: three independent slots of three times.
+                   Re-check against the latest server state right before
+                   requesting a link. */
+                var g = slotGroupOf(selectedTime);
+                if (g === -1 || !slotIsOpen(selectedDate.key, g)) {
+                    showToast('That time is not available — please pick another slot.');
+                    document.getElementById('slot-picker').scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    return;
+                }
+            }
+            var vehicle = document.getElementById('vehicle').value.trim();
+            var petHair = document.getElementById('pet-hair').checked;
+            var cars = parseInt(document.getElementById('car-count').value, 10);
+            if (!cars || cars < 1) { cars = 1; }
+            updateMultiCarNotice();
+            /* Remember what they requested, then hand off to the visitor's
+               Messages app and immediately wipe everything they typed —
+               this site never stores form data. */
+            var msg = 'Hi Revive Rides! My name is ' + customerName.value.trim() + ' and I\u2019d like to book a detail:\n\n'
+                + '• Name: ' + customerName.value.trim() + '\n'
+                + '• Plan: ' + planInput.value + '\n'
+                + '• Date: ' + prettyDate(selectedDate.y, selectedDate.m, selectedDate.d) + '\n'
+                + '• Time: ' + selectedTime + '\n'
+                + '• Address: ' + document.getElementById('address').value.trim() + '\n'
+                + '• Phone: ' + document.getElementById('phone').value.trim()
+                + '\n• Cars: ' + cars + (cars >= 3 ? ' (multi-car discount applies — $10 off per car)' : '')
+                + (vehicle ? '\n• Vehicle: ' + vehicle : '')
+                + (petHair ? '\n• Add-on: Pet hair removal (+$20)' : '');
+            /* Ask the server for a unique, one-time confirmation link tied
+               to exactly this date + time slot. */
+            var confirmUrl = '';
+            var box = document.getElementById('confirm-link-box');
+            try {
+                var resp = await fetch('/api/request-link', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ date: selectedDate.key, time: selectedTime })
+                });
+                if (resp.ok) {
+                    var data = await resp.json();
+                    confirmUrl = data.confirmUrl || '';
+                } else if (resp.status === 409) {
+                    showToast('That day was just booked — please pick another day.');
+                    document.getElementById('calendar').scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    refreshAvailability();
+                    return;
+                } else {
+                    showToast('Something went wrong on the booking server — please try again.');
+                    refreshAvailability();
+                    return;
+                }
+            } catch (err) {
+                showToast('Could not reach the booking server — please try again.');
+                return;
+            }
+            if (confirmUrl) {
+                msg += '\n\nConfirm my booking: ' + confirmUrl;
+            }
+            window.location.href = 'sms:+15086659868?&body=' + encodeURIComponent(msg);
+            /* Sending the text does NOT confirm anything. The unique link
+               does: whoever opens it books the slot for every visitor. */
+            document.getElementById('confirm-link-when').textContent =
+                prettyDate(selectedDate.y, selectedDate.m, selectedDate.d) + ' at ' + selectedTime;
+            document.getElementById('confirm-link-input').value = confirmUrl || '(link unavailable — please try again)';
+            box.style.display = '';
+            box.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            selectedTime = null;
+            form.reset();
+            updateMultiCarNotice();
+            planInput.value = '';
+            planTiles.forEach(function (t) {
+                t.classList.remove('selected');
+                t.setAttribute('aria-pressed', 'false');
+            });
+        }
+
+        /* Copy button for the confirmation link */
+        document.getElementById('confirm-link-copy').addEventListener('click', function () {
+            var input = document.getElementById('confirm-link-input');
+            if (!input.value || input.value.indexOf('http') !== 0) return;
+            function done() { showToast('Confirmation link copied — open it or send it to confirm.'); }
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(input.value).then(done, function () {
+                    input.select(); document.execCommand('copy'); done();
+                });
+            } else {
+                input.select(); document.execCommand('copy'); done();
+            }
+        });
+
+        /* Privacy: never retain anything the visitor typed. Clear the form
+           the moment they leave the page (reload, close, or navigate away). */
+        function wipeBookingData() {
+            form.reset();
+            planInput.value = '';
+            planTiles.forEach(function (t) {
+                t.classList.remove('selected');
+                t.setAttribute('aria-pressed', 'false');
+            });
+        }
+        window.addEventListener('pagehide', wipeBookingData, true);
+        window.addEventListener('beforeunload', wipeBookingData);
+    })();
+</script>
+</body>
+</html>

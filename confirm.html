@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Confirming your booking — Revive Rides</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23232323'/%3E%3Cpath d='M12 40 L24 22 H40 L52 40' fill='none' stroke='%2300cfff' stroke-width='5' stroke-linecap='round' stroke-linejoin='round'/%3E%3Ccircle cx='20' cy='44' r='5' fill='%230033cc'/%3E%3Ccircle cx='44' cy='44' r='5' fill='%230033cc'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+        --bg: #232323;
+        --bg-card: #2e2e2e;
+        --line-strong: rgba(255, 255, 255, 0.18);
+        --blue: #0033cc;
+        --cyan: #00cfff;
+        --cyan-soft: rgba(0, 207, 255, 0.12);
+        --text: #f2f3f4;
+        --text-muted: #b6b9be;
+        --text-dim: #8a8d93;
+        --radius: 16px;
+        --font: 'Josefin Sans', 'Trebuchet MS', sans-serif;
+    }
+
+    body {
+        font-family: var(--font);
+        background: var(--bg);
+        color: var(--text);
+        min-height: 100vh;
+        display: grid;
+        place-items: center;
+        padding: 2rem 1.25rem;
+        -webkit-font-smoothing: antialiased;
+    }
+
+    .card {
+        width: 100%;
+        max-width: 460px;
+        background: var(--bg-card);
+        border: 1px solid var(--line-strong);
+        border-radius: var(--radius);
+        padding: 2.5rem 2rem;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.9rem;
+    }
+
+    .mark {
+        width: 64px; height: 64px;
+        display: grid; place-items: center;
+        border-radius: 50%;
+        background: var(--cyan-soft);
+        border: 1px solid rgba(0, 207, 255, 0.4);
+    }
+
+    .mark svg { width: 30px; height: 30px; stroke: var(--cyan); }
+
+    .mark.pending svg { stroke: var(--text-muted); }
+
+    h1 { font-size: 1.5rem; font-weight: 700; letter-spacing: 0.02em; }
+
+    .slot { color: var(--cyan); font-weight: 600; font-size: 1rem; }
+
+    p.note { color: var(--text-muted); font-size: 0.95rem; }
+
+    .cta {
+        display: inline-flex; align-items: center; justify-content: center;
+        margin-top: 0.6rem;
+        padding: 0.8rem 1.6rem;
+        background: var(--blue);
+        color: #fff; text-decoration: none;
+        border-radius: 10px;
+        font-weight: 700; font-size: 0.95rem;
+    }
+
+    .cta:hover { filter: brightness(1.12); }
+</style>
+</head>
+<body>
+    <div class="card" role="status" aria-live="polite">
+        <div class="mark" id="mark">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m5 13 4 4L19 7"/></svg>
+        </div>
+        <h1 id="headline">Checking your link…</h1>
+        <p class="slot" id="slot"></p>
+        <p class="note" id="note">One moment.</p>
+        <a class="cta" href="/">Back to Revive Rides</a>
+    </div>
+
+<script>
+    (function () {
+        'use strict';
+        var token = (window.location.pathname.match(/\/confirm\/([a-f0-9]{24})$/) || [])[1];
+        var headline = document.getElementById('headline');
+        var slot = document.getElementById('slot');
+        var note = document.getElementById('note');
+        var mark = document.getElementById('mark');
+
+        function show(title, slotText, noteText) {
+            headline.textContent = title;
+            slot.textContent = slotText;
+            note.textContent = noteText;
+        }
+
+        /* The very first load of this page performs the one-time
+           confirmation (via ?first=1). Any later check — refresh, replay,
+           another device — omits it, so the link can only ever work once. */
+        var isFirstLoad = true;
+        function check() {
+            var url = '/api/link/' + token + (isFirstLoad ? '?first=1' : '');
+            isFirstLoad = false;
+            fetch(url)
+                .then(function (r) { return r.json(); })
+                .then(function (d) {
+                    if (d.just) {
+                        /* This exact page load consumed the link */
+                        mark.classList.remove('pending');
+                        show('Booking confirmed ✓', d.date && d.time ? d.date + ' at ' + d.time : '', 'Your booking is now shown on the calendar for every visitor. See you then!');
+                    } else if (d.status === 'unavailable') {
+                        /* The slot (or day) was booked by another link while
+                           this one was pending. */
+                        mark.classList.add('pending');
+                        show('This time was just taken', d.date && d.time ? d.date + ' at ' + d.time : '', 'Another booking for this slot was confirmed first, so this link can no longer be used. Please pick another time on the calendar.');
+                    } else {
+                        mark.classList.add('pending');
+                        show('This booking is already confirmed', '', 'This link has already been used or is not valid — nothing more to do.');
+                    }
+                })
+                .catch(function () {
+                    show('Something went wrong', '', 'Please try again in a moment.');
+                });
+        }
+        check();
+    })();
+</script>
+</body>
+</html>

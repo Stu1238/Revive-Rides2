@@ -1,0 +1,21 @@
+{
+  "name": "revive-rides",
+  "version": "1.0.0",
+  "description": "Revive Rides Auto Detailing - Booking Website",
+  "main": "server.js",
+  "scripts": {
+    "dev": "node server.js",
+    "start": "node server.js"
+  },
+  "keywords": [
+    "auto",
+    "detailing",
+    "booking",
+    "mobile"
+  ],
+  "author": "Revive Rides Auto Detailing",
+  "license": "MIT",
+  "devDependencies": {
+    "serve": "^14.2.0"
+  }
+}
