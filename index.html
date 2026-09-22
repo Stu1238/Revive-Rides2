@@ -1605,8 +1605,9 @@
         today.setHours(0, 0, 0, 0);
 
         /* ---- Booked days (shared server state) ----
-           The server holds the one source of truth in its memory; every
-           visitor polls /api/availability and sees the same calendar.
+           The server keeps the one source of truth in a persistent
+           shared store (Redis); every visitor polls /api/availability
+           and sees the same calendar on every device.
            Nothing is stored in localStorage, sessionStorage, or cookies,
            and no customer details exist anywhere in this page. */
         var SERVER_BOOKED = [];
