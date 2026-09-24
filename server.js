@@ -64,6 +64,8 @@ const OWNER_BOOKED = new Set([
    every other slot is blocked. Exact YYYY-MM-DD keys, so no other
    dates are ever affected. */
 const FULLY_BLOCKED_DATES = new Set([
+    '2026-09-26', // Sat, Sep 26 2026 — fully blocked (all slots, all times)
+    '2026-09-27', // Sun, Sep 27 2026 — fully blocked (all slots, all times)
     '2026-10-02',
     '2026-10-03',
     '2026-10-04'
