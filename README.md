@@ -6,10 +6,11 @@ Single-page marketing + booking site for Revive Rides, a mobile auto detailing b
 
 - **Flat, automotive design** — grey background, solid blue/cyan accents, Josefin Sans typography
 - **Visual availability calendar** — month grid with one appointment per day; Mon–Thu runs a single four-time slot (3:30–4:15 PM), Friday a single two-time slot (4:45–5:00 PM), and Saturday/Sunday offer ten times across three independent slots (8:30–9:30 AM, 1:00–1:30 PM, 4:45–5:00 PM). Booked days get an ✕ strike-through and become unclickable for every visitor. Add dates you confirmed offline to the `OWNER_BOOKED` list at the top of the script *and* in `server.js`
-- **Unique confirmation links** — picking a time and sending the pre-filled text does *not* mark anything booked. When the request text is generated, the site also asks the server for a unique, non-guessable one-time link (`yoursite.com/confirm/x7f9k2…`) tied to that exact date and time. The link is appended to the pre-filled text message *and* shown on the page with a Copy button so it can be sent manually. Opening the link — from any device — instantly marks the whole day booked for every visitor; re-opening it shows "This booking is already confirmed". No password, no admin panel: the unguessable link itself is the gate
+- **Unique confirmation links** — picking a time and sending the pre-filled text does *not* mark anything booked. When the request text is generated, the site also asks the server for a unique, non-guessable one-time link (`yoursite.com/confirm/x7f9k2…`) tied to that exact date and time. The link exists **only inside the pre-filled text message** sent to the business number — it is never shown, stored, or copyable on the public site. Opening the link — from any device — instantly marks the slot booked for every visitor; re-opening it shows "This booking is already confirmed". No password, no admin panel: the unguessable link itself is the gate
 - **Privacy** — no localStorage, sessionStorage, or cookies, and no customer info is kept anywhere. The server holds only the shared booking state (booked day keys + one-time tokens); no names, addresses, or phone numbers ever reach it. Serve the site through `server.js` (not a plain static host) so the shared state and confirmation links work
 - **Persistent shared booking store** — bookings live in Redis (Upstash), not server memory, so every visitor on every device sees the same calendar instantly and bookings never disappear. Confirmation is atomic (a single Lua script), so two people racing for the same slot can never both win. One-time confirmation links expire after 24 hours; confirmed bookings never expire
 - **SMS booking flow** — visitor picks a plan, a day on the calendar, enters address/phone, and the site opens their Messages app with the full request pre-filled
+- **Customer reviews with approve-first moderation** — a reviews section at the bottom of the page shows approved reviews (star cards + average summary). Visitors can submit a star rating and review; submissions land in a pending queue and are published **only after you approve them** on a secret, unlinked admin page at `/reviews-admin` (password-protected via `REVIEWS_ADMIN_KEY`). Includes profanity filtering, per-IP rate limiting, spam-length caps, one-click approve / unapprove / delete, and HTML-escaped rendering
 - **Package cards** — Exterior Detail, Premium Interior Detail (highlighted as "Most Popular"), Full Auto Detail, each with feature lists and pricing; "Select Package" pre-fills the booking form
 - **Mobile navigation** — hamburger menu with animated toggle on small screens
 - **Static, motion-free UI** — no scroll or float animations; only essential feedback transitions (hover, nav, toast)
@@ -21,7 +22,8 @@ Single-page marketing + booking site for Revive Rides, a mobile auto detailing b
 
 - `index.html` — the entire site (HTML + CSS + JS in one file)
 - `confirm.html` — the page a visitor lands on after opening a unique `/confirm/:token` link
-- `server.js` — zero-dependency Node server: serves the site, reads/writes booking state from the persistent store (Upstash Redis REST by default), issues one-time confirmation links, and handles `/confirm/:token`
+- `reviews-admin.html` — the secret owner-only moderation dashboard (served at `/reviews-admin`; never linked from the site and blocked from static serving)
+- `server.js` — zero-dependency Node server: serves the site, reads/writes booking state from the persistent store (Upstash Redis REST by default), issues one-time confirmation links, handles `/confirm/:token`, and powers the reviews API (public feed + submission queue + admin moderation)
 - `package.json` — npm config (`node server.js` via `npm start`, `npm test` for the booking-store self-test)
 
 ## To Run the Site
@@ -49,6 +51,22 @@ npm test            # runs `node server.js --self-test` — verifies booking
 ```
 
 The server logs which backend is in use at startup; if a production deploy ever falls back to memory, it logs a loud warning — check the Vercel function logs if bookings seem to vanish.
+
+### Customer reviews
+
+Reviews live in the same persistent store (hash `rr:reviews`) alongside booking state, so they work on every backend (Upstash REST, TCP Redis, in-memory dev) and survive restarts.
+
+**Set the admin key** — add `REVIEWS_ADMIN_KEY` to your environment (Vercel: Project Settings → Environment Variables; locally: a line in `.env`):
+
+```bash
+REVIEWS_ADMIN_KEY=choose-a-long-random-string
+```
+
+Then visit `https://yoursite.com/reviews-admin` (the page is not linked anywhere on the site), enter the key, and approve/unapprove/delete reviews. Each login issues a one-time token valid for 10 minutes, kept only in the tab's memory — the password itself is never stored in the browser.
+
+Flow: visitor submits a review (1–5 stars, name, optional vehicle, up to 1000 chars) → it is validated (length caps, profanity filter, 5 submissions per IP per 10 min) and stored as `pending` → **nothing appears publicly until you approve it** → approved reviews show at the bottom of the homepage, newest first, HTML-escaped. Unapprove pulls a review back into the queue; delete removes it permanently.
+
+Run `npm test` — the self-test also covers the review flow (profanity filter, input validation, pending→approved→unapproved→delete lifecycle) against the configured store, then restores the data it touched.
 
 ## Customization Points
 

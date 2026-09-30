@@ -27,7 +27,27 @@
      rr:days       HASH  dateKey -> "1"   (days FULLY booked)
      rr:slots      HASH  dateKey -> JSON array of confirmed times
      rr:link:TOKEN       JSON { date, time, confirmed, spent } (24h TTL)
+
+   A booking is ONLY ever marked confirmed through the /confirm/:token
+   page (the link sent via text to the business phone). There is
+   deliberately no other endpoint or code path that confirms a booking.
      rr:bs               backend id, set at boot ("upstash-rest", etc.)
+
+   ---- CUSTOMER REVIEWS (approve-first moderation) ----
+   Visitors submit star ratings + short reviews at the bottom of the
+   homepage. Nothing is published automatically: submissions land in a
+   pending queue and appear on the site ONLY after the owner approves
+   them on a secret admin page (/reviews-admin). Admin actions are
+   gated by REVIEWS_ADMIN_KEY and the page is never linked from the
+   site. Keys:
+     rr:reviews          HASH  id -> JSON review object
+       { id, name, rating, text, vehicle, createdAt,
+         status: 'pending' | 'approved', approvedAt }
+     rr:rl:IP      STRING "count"     (fixed window, 600s TTL)
+     rr:ral:TOKEN  STRING  (600s TTL) — one-time admin-login token
+
+   The admin page talks to /api/admin/reviews via JSON POSTs and keeps
+   its token only in the tab's JS memory (never localStorage).
 
    Nothing about customers is stored — no names, addresses, or
    phone numbers ever reach this server. Credentials live only in
@@ -46,9 +66,97 @@ const PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 3000;
 const PUBLIC_DIR = __dirname;
 const INDEX_HTML = path.join(PUBLIC_DIR, 'index.html');
 
+/* ---- Local .env fallback ----
+   In production, env vars come from the platform (Vercel dashboard).
+   For plain `node server.js` locally, populate any UNSET vars from a
+   simple KEY=VALUE .env file next to this script (real environment
+   variables always win; .env is git-ignored and never served). */
+(function loadDotEnvFallback() {
+    try {
+        var src = fs.readFileSync(path.join(__dirname, '.env'), 'utf8');
+        src.split(/\r?\n/).forEach(function (line) {
+            var m = line.match(/^\s*([A-Za-z_][A-Za-z0-9_]*)\s*=\s*(.*)\s*$/);
+            if (!m) return;
+            var v = m[2].trim();
+            if ((v.charAt(0) === '"' && v.slice(-1) === '"') || (v.charAt(0) === "'" && v.slice(-1) === "'")) v = v.slice(1, -1);
+            if (!(m[1] in process.env)) process.env[m[1]] = v;
+        });
+    } catch (e) { /* no .env file — fine */ }
+})();
+
 /* One-time confirmation links stop being usable a day after issue.
    Confirmed bookings have NO expiry — they persist indefinitely. */
 const PENDING_LINK_TTL_SECONDS = 60 * 60 * 24;
+
+/* ---- Customer reviews (approve-first moderation) ----
+   Submissions land in a pending queue (rr:reviews hash, status
+   'pending') and are published to the public /api/reviews feed ONLY
+   after the owner approves them on the secret admin page. Display
+   order: newest approved first. Limits protect the queue and the
+   public feed from spam floods. */
+const REVIEW_MIN_LEN = 4;
+const REVIEW_MAX_LEN = 1000;
+const REVIEW_NAME_MAX = 40;
+const REVIEW_VEHICLE_MAX = 60;
+const REVIEWS_FEED_LIMIT = 120;      // newest N approved reviews served publicly
+const REVIEWS_SUBMIT_PER_WINDOW = 5; // submissions per IP per 10 minutes
+const REVIEW_RATE_WINDOW_SECONDS = 600;
+
+/* Reviews are flagged by a list of whole-word patterns (matched
+   case-insensitively). Add or trim words to taste. */
+const REVIEW_BANNED_WORDS = [
+    'fuck', 'shit', 'bitch', 'cunt', 'nigger', 'faggot', 'asshole',
+    'dick', 'pussy', 'whore', 'slut'
+];
+
+/* Reviews admin: single shared password. Set REVIEWS_ADMIN_KEY in the
+   environment (Vercel: Project Settings → Environment Variables; local:
+   .env). The admin page stays unlinked and unknown to visitors; all
+   moderation actions require the key. */
+function reviewsAdminKey() {
+    return String(process.env.REVIEWS_ADMIN_KEY || '').trim();
+}
+
+function timingSafeEqualStr(a, b) {
+    var ab = Buffer.from(String(a));
+    var bb = Buffer.from(String(b));
+    if (ab.length !== bb.length) {
+        // Still burn a comparison to keep timing flat-ish
+        crypto.timingSafeEqual(ab, ab);
+        return false;
+        
+    }
+    return crypto.timingSafeEqual(ab, bb);
+}
+
+/* Simple fixed-window rate limiter backed by the persistent store so it
+   works per-instance on serverless. Returns true when ALLOWED. */
+async function rateLimit(key, limit, windowSeconds) {
+    try {
+        var raw = await store.get(key);
+        var n = parseInt(raw, 10);
+        if (isNaN(n)) n = 0;
+        n += 1;
+        if (n > limit) return false;
+        await store.setEx(key, windowSeconds, String(n));
+        return true;
+    } catch (e) {
+        /* Store trouble: fail OPEN for a public read-friendly feature —
+           better a rare missed throttle than a broken site. */
+        return true;
+    }
+}
+
+function clientIp(req) {
+    var xf = req.headers['x-forwarded-for'];
+    var ip = (typeof xf === 'string' && xf.trim()) ? xf.split(',')[0].trim() : (req.socket && req.socket.remoteAddress) || 'unknown';
+    return String(ip).slice(0, 60);
+}
+
+function makeToken() {
+    // 24 hex chars = 96 bits of randomness — non-guessable
+    return crypto.randomBytes(12).toString('hex');
+}
 
 /* ---- Owner-blocked days ('YYYY-MM-DD') — mirror of the
    OWNER_BOOKED list in index.html so the server also treats
@@ -68,7 +176,11 @@ const FULLY_BLOCKED_DATES = new Set([
     '2026-09-27', // Sun, Sep 27 2026 — fully blocked (all slots, all times)
     '2026-10-02',
     '2026-10-03',
-    '2026-10-04'
+    '2026-10-04',
+    '2026-09-29', // Tue, Sep 29 2026 — fully blocked (client job)            '2026-10-06', // Tue, Oct 6 2026 — fully blocked (client job)
+            '2026-10-07', // Wed, Oct 7 2026 — fully blocked (client job)
+            '2026-10-16', // Fri, Oct 16 2026 — fully blocked
+            '2026-10-27'  // Tue, Oct 27 2026 — fully blocked
 ]);
 
 const PARTIAL_DAY_OPEN_SLOTS = {
@@ -76,19 +188,19 @@ const PARTIAL_DAY_OPEN_SLOTS = {
 };
 
 /* ---- Weekend slot schedule ----
-   Non-weekday days (Saturday/Sunday) run three independent slots:
-   Morning (5 times), Early afternoon (3) and Late afternoon (2).
+   Non-weekday days (Saturday/Sunday) run two independent slots:
+   Morning (5 times) and Early afternoon (3). The late-afternoon
+   slot was removed — its end times ran too close to dusk.
    All slots are open simultaneously — a customer may book any of
-   the ten times in any order. Confirming any one time in a slot
+   the eight times in any order. Confirming any one time in a slot
    closes that whole slot (its other times become unavailable) and
    leaves the other slots untouched. The day is only fully booked
-   once every slot has been used — three bookings total, in any
+   once every slot has been used — two bookings total, in any
    order. Mon–Thu keeps a single four-time slot and Friday a single
    two-time slot: one booking per day, same rule as before. */
 const WEEKEND_SLOT_GROUPS = [
     { name: 'Morning',         times: ['8:30 AM', '8:45 AM', '9:00 AM', '9:15 AM', '9:30 AM'] },
-    { name: 'Early afternoon', times: ['1:00 PM', '1:15 PM', '1:30 PM'] },
-    { name: 'Late afternoon',  times: ['4:45 PM', '5:00 PM'] }
+    { name: 'Early afternoon', times: ['1:00 PM', '1:15 PM', '1:30 PM'] }
 ];
 
 /* ============================================================
@@ -257,7 +369,16 @@ function makeMemoryBackend() {
         async del(key) { strings.delete(key); },
         async confirm(date, time, groups, open) {
             /* Native JS port of CONFIRM_LUA — identical semantics for
-               the dev fallback (no Lua engine in memory mode). */
+               the dev fallback (no Lua engine in memory mode). Like the
+               Lua script, it receives groups/open as JSON strings and
+               decodes them itself. */
+            function jsonArr(s) {
+                if (Array.isArray(s)) return s;
+                try { var v = JSON.parse(s); return Array.isArray(v) ? v : []; }
+                catch (e) { return []; }
+            }
+            groups = jsonArr(groups);
+            open = jsonArr(open);
             var days = hashes.get('rr:days') || new Map();
             var slots = hashes.get('rr:slots') || new Map();
             if (days.get(date)) return { result: 0 };
@@ -469,11 +590,6 @@ async function confirmBooking(date, time) {
 }
 
 /* ---- Helpers ---- */
-function makeToken() {
-    // 24 hex chars = 96 bits of randomness — non-guessable
-    return crypto.randomBytes(12).toString('hex');
-}
-
 function validateDateKey(date) {
     return typeof date === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(date);
 }
@@ -482,6 +598,89 @@ function validateTimeLabel(time) {
     // Only labels produced by the site's slot picker are accepted
     if (typeof time !== 'string') return false;
     return /^(0?[1-9]|1[0-2]):[0-5]\d (AM|PM)$/.test(time);
+}
+
+/* ============================================================
+   CUSTOMER REVIEWS — approve-first moderation.
+   Storage: single hash rr:reviews, field = review id, value = JSON:
+     { id, name, rating, text, vehicle, createdAt,
+       status: 'pending' | 'approved', approvedAt }
+   The public feed (/api/reviews) serves only status='approved'.
+   ============================================================ */
+
+function cleanReviewId(id) {
+    return (typeof id === 'string' && /^[a-f0-9]{24}$/.test(id)) ? id : null;
+}
+
+function readAllReviews() {
+    return store.hgetall('rr:reviews').then(function (raw) {
+        var out = [];
+        Object.keys(raw).forEach(function (id) {
+            try {
+                var r = JSON.parse(raw[id]);
+                if (r && r.id && typeof r.rating === 'number') out.push(r);
+            } catch (e) { /* ignore malformed entries */ }
+        });
+        return out;
+    });
+}
+
+function publicReviews() {
+    return readAllReviews().then(function (all) {
+        return all
+            .filter(function (r) { return r.status === 'approved'; })
+            .sort(function (a, b) { return (b.approvedAt || b.createdAt || '').localeCompare(a.approvedAt || a.createdAt || ''); })
+            .slice(0, REVIEWS_FEED_LIMIT);
+    });
+}
+
+function countPendingReviews() {
+    return readAllReviews().then(function (all) {
+        var n = 0;
+        all.forEach(function (r) { if (r.status === 'pending') n++; });
+        return n;
+    });
+}
+
+/* Whole-word, case-insensitive match against every pattern. */
+function hasBannedWord(s) {
+    var low = String(s || '').toLowerCase();
+    for (var i = 0; i < REVIEW_BANNED_WORDS.length; i++) {
+        var w = REVIEW_BANNED_WORDS[i];
+        var re = new RegExp('(^|[^a-z])' + w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '([^a-z]|$)', 'i');
+        if (re.test(low)) return true;
+    }
+    return false;
+}
+
+function validateReviewInput(b) {
+    if (!b || typeof b !== 'object') return 'Invalid request.';
+    var name = typeof b.name === 'string' ? b.name.trim().replace(/\s+/g, ' ') : '';
+    var text = typeof b.text === 'string' ? b.text.trim().replace(/[ \t]+/g, ' ') : '';
+    var vehicle = typeof b.vehicle === 'string' ? b.vehicle.trim().replace(/\s+/g, ' ') : '';
+    var rating = typeof b.rating === 'number' ? Math.round(b.rating) : parseInt(b.rating, 10);
+    if (!name) return 'Please add your name.';
+    if (name.length > REVIEW_NAME_MAX) return 'Name is too long (max ' + REVIEW_NAME_MAX + ' characters).';
+    if (rating < 1 || rating > 5 || isNaN(rating)) return 'Rating must be between 1 and 5 stars.';
+    if (!text) return 'Please write a few words about your experience.';
+    if (text.length < REVIEW_MIN_LEN) return 'Review is too short.';
+    if (text.length > REVIEW_MAX_LEN) return 'Review is too long (max ' + REVIEW_MAX_LEN + ' characters).';
+    if (vehicle.length > REVIEW_VEHICLE_MAX) return 'Vehicle is too long (max ' + REVIEW_VEHICLE_MAX + ' characters).';
+    if (hasBannedWord(name) || hasBannedWord(text) || hasBannedWord(vehicle)) return 'Please keep your review clean.';
+    return null;
+}
+
+function makeReview(b) {
+    return {
+        id: makeToken(),
+        name: String(b.name).trim().replace(/\s+/g, ' ').slice(0, REVIEW_NAME_MAX),
+        rating: Math.max(1, Math.min(5, Math.round(b.rating))),
+        text: String(b.text).trim().slice(0, REVIEW_MAX_LEN),
+        vehicle: String(b.vehicle || '').trim().slice(0, REVIEW_VEHICLE_MAX),
+        createdAt: new Date().toISOString(),
+        status: 'pending',
+        approvedAt: null
+    };
 }
 
 function send(res, status, body, headers) {
@@ -521,7 +720,7 @@ const MIME = {
 };
 
 /* Never serve these, whatever their extension */
-const DENY_FILES = new Set(['server.js', 'package.json', 'package-lock.json', 'confirm.html']);
+const DENY_FILES = new Set(['server.js', 'package.json', 'package-lock.json', 'confirm.html', 'reviews-admin.html']);
 
 function serveStatic(res, urlPath) {
     var rel = urlPath === '/' ? '/index.html' : urlPath;
@@ -548,6 +747,11 @@ function serveStatic(res, urlPath) {
 /* ---- Confirmation page (served at /confirm/:token) ---- */
 function confirmPageHTML() {
     return fs.readFileSync(path.join(PUBLIC_DIR, 'confirm.html'), 'utf8');
+}
+
+/* ---- Reviews admin page (secret, unlinked) ---- */
+function adminPageHTML() {
+    return fs.readFileSync(path.join(PUBLIC_DIR, 'reviews-admin.html'), 'utf8');
 }
 
 /* ---- Request handling ----
@@ -596,7 +800,7 @@ async function handle(req, res) {
             return sendJSON(res, 409, { error: 'That day is already booked.' });
         }
         if (isWeekendDate(date) && !(await isWeekendTimeBookable(state, date, time))) {
-            /* Weekend days: three independent slots — any time is
+            /* Weekend days: two independent slots — any time is
                bookable while its slot is unused. */
             return sendJSON(res, 409, { error: 'That time is not available.' });
         }
@@ -627,7 +831,13 @@ async function handle(req, res) {
        The page passes ?first=1 on its initial load: that single request
        performs the one-time confirmation and marks the day booked for
        every visitor. Every later check (replays, refreshes, other
-       devices) only reports status — the link is spent. */
+       devices) only reports status — the link is spent.
+
+       This is the ONLY code path that can mark a slot booked: it needs
+       the unique, non-guessable, one-time link (/confirm/:token), which
+       exists only inside the pre-filled text message sent to the
+       business phone. Nothing else in this server (or in any client
+       file) can confirm a booking. */
     m = p.match(/^\/api\/link\/([a-f0-9]{24})$/);
     if (req.method === 'GET' && m) {
         var token2 = m[1];
@@ -687,6 +897,110 @@ async function handle(req, res) {
         });
     }
 
+    /* ---- Customer reviews: public feed (approved only) ---- */
+    if (req.method === 'GET' && p === '/api/reviews') {
+        try {
+            var feed = await publicReviews();
+            return sendJSON(res, 200, { reviews: feed });
+        } catch (err) {
+            console.error('[reviews] store error:', err.message);
+            return sendJSON(res, 503, { error: 'Store unavailable' });
+        }
+    }
+
+    /* ---- Customer reviews: public submission (goes to pending queue) ---- */
+    if (req.method === 'POST' && p === '/api/reviews') {
+        if (!(await rateLimit('rr:rl:' + clientIp(req), REVIEWS_SUBMIT_PER_WINDOW, REVIEW_RATE_WINDOW_SECONDS))) {
+            return sendJSON(res, 429, { error: 'Too many reviews submitted — please try again later.' });
+        }
+        var rBody;
+        try { rBody = JSON.parse(await readBody(req) || '{}'); } catch (e) { rBody = {}; }
+        var rErr = validateReviewInput(rBody);
+        if (rErr) return sendJSON(res, 400, { error: rErr });
+        var review = makeReview(rBody);
+        try {
+            await store.hset('rr:reviews', review.id, JSON.stringify(review));
+        } catch (err) {
+            console.error('[reviews] store error:', err.message);
+            return sendJSON(res, 503, { error: 'Store unavailable' });
+        }
+        return sendJSON(res, 200, { ok: true, status: 'pending' });
+    }
+
+    /* ---- Reviews admin: password -> one-time token (10 min) ----
+       The page never stores the password itself; it keeps only this
+       short-lived token in tab memory and uses it for actions. */
+    if (req.method === 'POST' && p === '/api/admin/reviews/login') {
+        var aBody;
+        try { aBody = JSON.parse(await readBody(req) || '{}'); } catch (e) { aBody = {}; }
+        var key = reviewsAdminKey();
+        if (!key) {
+            console.error('[reviews-admin] REVIEWS_ADMIN_KEY is not set — admin login disabled.');
+            return sendJSON(res, 503, { error: 'Admin access is not configured.' });
+        }
+        if (!timingSafeEqualStr(String(aBody.key || ''), key)) {
+            await new Promise(function (r2) { setTimeout(r2, 600); }); // slow brute force
+            return sendJSON(res, 401, { error: 'Wrong key.' });
+        }
+        var at = makeToken();
+        await store.setEx('rr:ral:' + at, 600, '1');
+        return sendJSON(res, 200, { token: at });
+    }
+
+    /* ---- Reviews admin: all moderation actions ----
+       POST /api/admin/reviews  { token, action, id }
+         action: 'list' | 'approve' | 'unapprove' | 'delete' */
+    if (req.method === 'POST' && p === '/api/admin/reviews') {
+        var mBody;
+        try { mBody = JSON.parse(await readBody(req) || '{}'); } catch (e) { mBody = {}; }
+        var tok = typeof mBody.token === 'string' ? mBody.token : '';
+        var tokOk = false;
+        if (/^[a-f0-9]{24}$/.test(tok)) {
+            try { tokOk = (await store.get('rr:ral:' + tok)) === '1'; } catch (e2) { tokOk = false; }
+        }
+        if (!tokOk) return sendJSON(res, 401, { error: 'Session expired — log in again.' });
+        var action = mBody.action;
+        try {
+            if (action === 'list') {
+                var all = await readAllReviews();
+                all.sort(function (a, b) { return (b.createdAt || '').localeCompare(a.createdAt || ''); });
+                return sendJSON(res, 200, { reviews: all, pending: all.filter(function (r) { return r.status === 'pending'; }).length });
+            }
+            var id = cleanReviewId(mBody.id);
+            if (!id) return sendJSON(res, 400, { error: 'Invalid review id.' });
+            if (action === 'delete') {
+                await store.hdel('rr:reviews', id);
+            } else if (action === 'approve' || action === 'unapprove') {
+                var curHash = await store.hgetall('rr:reviews');
+                var curRaw = curHash[id] || null;
+                if (!curRaw) return sendJSON(res, 404, { error: 'Review not found.' });
+                var cur;
+                try { cur = JSON.parse(curRaw); } catch (e3) { return sendJSON(res, 404, { error: 'Review not found.' }); }
+                if (action === 'approve') {
+                    cur.status = 'approved';
+                    cur.approvedAt = new Date().toISOString();
+                } else {
+                    cur.status = 'pending';
+                    cur.approvedAt = null;
+                }
+                await store.hset('rr:reviews', id, JSON.stringify(cur));
+            } else {
+                return sendJSON(res, 400, { error: 'Unknown action.' });
+            }
+            var all2 = await readAllReviews();
+            all2.sort(function (a, b) { return (b.createdAt || '').localeCompare(a.createdAt || ''); });
+            return sendJSON(res, 200, { reviews: all2, pending: all2.filter(function (r) { return r.status === 'pending'; }).length });
+        } catch (err) {
+            console.error('[reviews-admin] store error:', err.message);
+            return sendJSON(res, 503, { error: 'Store unavailable' });
+        }
+    }
+
+    /* ---- Reviews admin page (secret; nothing links to it) ---- */
+    if (req.method === 'GET' && (p === '/reviews-admin' || p === '/reviews-admin/')) {
+        return send(res, 200, adminPageHTML(), { 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'no-store' });
+    }
+
     serveStatic(res, p);
 }
 
@@ -742,19 +1056,13 @@ async function selfTest() {
         state = await loadBookedState();
         check('slot 1 used -> 8:45 AM blocked', (await isWeekendTimeBookable(state, SAT, '8:45 AM')) === false);
         check('slot 1 used -> 9:30 AM blocked', (await isWeekendTimeBookable(state, SAT, '9:30 AM')) === false);
-        check('slot 1 used -> other slots untouched (1:00 PM open)', (await isWeekendTimeBookable(state, SAT, '1:00 PM')) === true);
-        check('slot 1 used -> other slots untouched (5:00 PM open)', (await isWeekendTimeBookable(state, SAT, '5:00 PM')) === true);
-        check('day not fully booked after 1 of 3 slots', !state.bookedDays.has(SAT));
+        check('slot 1 used -> other slot untouched (1:00 PM open)', (await isWeekendTimeBookable(state, SAT, '1:00 PM')) === true);
+        check('day not fully booked after 1 of 2 slots', !state.bookedDays.has(SAT));
         // Early afternoon slot second
         check('weekend 1:30 PM confirms', (await confirmBooking(SAT, '1:30 PM')) === true);
         state = await loadBookedState();
         check('slot 2 used -> 1:00 PM blocked', (await isWeekendTimeBookable(state, SAT, '1:00 PM')) === false);
-        check('slots 1+2 used -> slot 3 still open (4:45 PM)', (await isWeekendTimeBookable(state, SAT, '4:45 PM')) === true);
-        check('day not fully booked after 2 of 3 slots', !state.bookedDays.has(SAT));
-        // Late afternoon slot third
-        check('weekend 5:00 PM confirms', (await confirmBooking(SAT, '5:00 PM')) === true);
-        state = await loadBookedState();
-        check('all 3 slots used -> day fully booked (crossed off for everyone)', state.bookedDays.has(SAT));
+        check('slots 1+2 used -> day fully booked (crossed off for everyone)', state.bookedDays.has(SAT));
         check('fully-booked day: no time bookable', (await isWeekendTimeBookable(state, SAT, '8:30 AM')) === false);
 
         /* ---- Double-book race ---- */
@@ -769,6 +1077,40 @@ async function selfTest() {
         await new Promise(function (r) { setTimeout(r, 1500); });
         var expired = await store.get('rr:link:selftest');
         check('pending link expires automatically (confirmed bookings never expire)', expired === null);
+
+        /* ---- Customer reviews: approve-first moderation ---- */
+        var prodReviews = await store.hgetall('rr:reviews');
+        await store.del('rr:reviews');
+        try {
+            check('banned-word filter catches profanity', hasBannedWord('this place is shit') === true);
+            check('banned-word filter does not flag normal words', hasBannedWord('They detail every class of car with care') === false);
+
+            var bad = validateReviewInput({ name: 'X'.repeat(60), rating: 5, text: 'Great job, very shiny!' });
+            check('over-long name rejected', bad !== null);
+            var bad2 = validateReviewInput({ name: 'Sam', rating: 9, text: 'Great job, very shiny!' });
+            check('rating out of range rejected', bad2 !== null);
+
+            var rev = makeReview({ name: 'Self Test', rating: 5, text: 'Fantastic work — the car looks brand new!', vehicle: '2049 Test Car' });
+            await store.hset('rr:reviews', rev.id, JSON.stringify(rev));
+            check('new review starts pending (not in public feed)', (await publicReviews()).length === 0);
+
+            rev.status = 'approved';
+            rev.approvedAt = new Date().toISOString();
+            await store.hset('rr:reviews', rev.id, JSON.stringify(rev));
+            var feedAfter = await publicReviews();
+            check('approved review appears in public feed', feedAfter.length === 1 && feedAfter[0].id === rev.id && feedAfter[0].rating === 5);
+
+            rev.status = 'pending';
+            await store.hset('rr:reviews', rev.id, JSON.stringify(rev));
+            check('unapproved review disappears from public feed', (await publicReviews()).length === 0);
+
+            await store.hdel('rr:reviews', rev.id);
+            check('deleted review is gone from the store', Object.keys(await store.hgetall('rr:reviews')).length === 0);
+        } finally {
+            /* Restore whatever reviews existed before the test. */
+            await store.del('rr:reviews');
+            for (var rk in prodReviews) await store.hset('rr:reviews', rk, prodReviews[rk]);
+        }
     } finally {
         /* Restore: wipe every 2049-* test date, then rebuild both hashes
            from the pre-test snapshot PLUS any real (non-test) fields that

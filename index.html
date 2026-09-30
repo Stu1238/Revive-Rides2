@@ -514,7 +514,7 @@
 
     .slot-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 0.5rem; }
 
-    /* Weekend slot-group headers — Morning / Early afternoon / Late afternoon */
+    /* Weekend slot-group headers — Morning / Early afternoon */
     .slot-group-header {
         grid-column: 1 / -1;
         margin-top: 0.35rem;
@@ -573,40 +573,6 @@
     /* Cyan check on used weekend slot-group headers */
     .slot-group-check { margin-right: 0.45rem; color: var(--cyan); }
 
-    /* ============ Confirmation link box ============ */
-    .i-booked {
-        max-width: 760px; margin: -0.75rem auto 2.25rem;
-        padding: 1.5rem 2rem;
-        background: rgba(0, 207, 255, 0.07);
-        border: 1px solid rgba(0, 207, 255, 0.3);
-        border-radius: var(--radius);
-        display: flex; flex-direction: column; align-items: center; gap: 0.6rem;
-        text-align: center;
-    }
-
-    .i-booked-note { color: var(--text-muted); font-size: 0.95rem; margin: 0; }
-
-    .i-booked-when { color: var(--cyan); font-size: 0.88rem; font-weight: 600; margin: 0; }
-
-    .i-booked-when:empty { display: none; }
-
-    .confirm-link-row { display: flex; gap: 0.5rem; width: 100%; max-width: 560px; margin-top: 0.25rem; }
-
-    .confirm-link-input {
-        flex: 1;
-        min-width: 0;
-        padding: 0.6rem 0.9rem;
-        background: var(--bg);
-        border: 1px solid var(--line-strong);
-        border-radius: var(--radius-sm);
-        color: var(--cyan);
-        font-family: var(--font);
-        font-size: 0.85rem;
-    }
-
-    .confirm-link-input:focus { outline: none; border-color: var(--cyan); }
-
-    .confirm-link-row .btn { flex: none; padding: 0.6rem 1.4rem; }
 
     .slot-btn .slot-status { display: block; font-size: 0.62rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: inherit; }
 
@@ -726,6 +692,118 @@
 
     .contact-links svg { width: 18px; height: 18px; }
 
+    /* ============ Reviews ============ */
+    .reviews { background: var(--bg-raised); border-top: 1px solid var(--line); }
+
+    .reviews-summary {
+        display: flex; flex-wrap: wrap; align-items: baseline; justify-content: center;
+        gap: 0.5rem 0.75rem;
+        margin: -1.75rem auto 2.5rem;
+        font-size: 1rem; color: var(--text-muted);
+    }
+
+    .reviews-summary .avg-num { font-family: var(--font); font-size: 1.9rem; font-weight: 700; color: var(--text); line-height: 1; }
+
+    .reviews-summary .stars { color: var(--cyan); letter-spacing: 0.12em; font-size: 1.05rem; }
+
+    .reviews-grid {
+        display: grid; grid-template-columns: repeat(3, 1fr);
+        gap: 1.5rem;
+    }
+
+    .review-card {
+        display: flex; flex-direction: column;
+        background: var(--bg-card);
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        padding: 1.75rem 1.5rem;
+        transition: border-color 0.3s ease, transform 0.3s ease;
+    }
+
+    .review-card:hover { border-color: rgba(0, 207, 255, 0.35); transform: translateY(-3px); }
+
+    .review-stars { color: var(--cyan); letter-spacing: 0.14em; font-size: 0.95rem; margin-bottom: 0.75rem; }
+
+    .review-text { color: var(--text-muted); font-size: 0.95rem; line-height: 1.65; margin-bottom: 1.25rem; overflow-wrap: anywhere; }
+
+    .review-meta { margin-top: auto; display: flex; align-items: center; gap: 0.75rem; }
+
+    .review-avatar {
+        width: 40px; height: 40px; flex: none;
+        display: grid; place-items: center;
+        background: var(--cyan-soft);
+        border: 1px solid rgba(0, 207, 255, 0.3);
+        border-radius: 50%;
+        color: var(--cyan); font-weight: 700; font-size: 1rem;
+    }
+
+    .review-meta .who { font-weight: 700; font-size: 0.92rem; line-height: 1.3; overflow-wrap: anywhere; }
+
+    .review-meta .when { color: var(--text-dim); font-size: 0.78rem; }
+
+    .review-empty {
+        grid-column: 1 / -1;
+        text-align: center;
+        color: var(--text-dim);
+        background: var(--bg-card);
+        border: 1px dashed var(--line-strong);
+        border-radius: var(--radius);
+        padding: 2.5rem 1.5rem;
+    }
+
+    .reviews-form-wrap { max-width: 760px; margin: 3.5rem auto 0; }
+
+    .reviews-form {
+        background: var(--bg-card);
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        padding: 2.25rem;
+    }
+
+    .reviews-form h3 { font-family: var(--font); font-size: 1.4rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.03em; margin-bottom: 0.4rem; }
+
+    .reviews-form .form-sub { color: var(--text-muted); font-size: 0.92rem; margin-bottom: 1.5rem; }
+
+    /* Interactive star picker */
+    .star-input { display: flex; gap: 0.25rem; }
+
+    .star-input button {
+        width: 40px; height: 40px;
+        display: grid; place-items: center;
+        background: transparent; border: none; border-radius: 8px;
+        color: var(--text-dim);
+        cursor: pointer;
+        transition: color 0.15s ease, transform 0.15s ease;
+    }
+
+    .star-input button:hover { transform: scale(1.12); }
+
+    .star-input button.on { color: var(--cyan); }
+
+    .star-input svg { width: 26px; height: 26px; }
+
+    .reviews-form .btn { width: 100%; margin-top: 0.5rem; }
+
+    .review-thanks {
+        display: none;
+        text-align: center;
+        padding: 2.5rem 1.5rem;
+        background: var(--bg-card);
+        border: 1px solid rgba(0, 207, 255, 0.35);
+        border-radius: var(--radius);
+    }
+
+    .review-thanks h3 { font-family: var(--font); font-size: 1.4rem; font-weight: 700; text-transform: uppercase; margin-bottom: 0.4rem; }
+
+    .review-thanks p { color: var(--text-muted); font-size: 0.95rem; }
+
+    .review-thanks .again-link {
+        display: inline-block; margin-top: 1rem;
+        background: none; border: none;
+        color: var(--cyan); font-weight: 600; font-size: 0.9rem;
+        cursor: pointer; text-decoration: underline;
+    }
+
     /* ============ Footer ============ */
     .site-footer { border-top: 1px solid var(--line); padding: 2.75rem 0; }
 
@@ -771,6 +849,7 @@
         .hero-grid { grid-template-columns: 1fr; gap: 2.5rem; }
         .hero-visual { max-width: 560px; margin: 0 auto; }
         .services-grid, .process-grid { grid-template-columns: 1fr 1fr; }
+        .reviews-grid { grid-template-columns: 1fr 1fr; }
         .why-grid { grid-template-columns: 1fr 1fr; }
     }
 
@@ -806,6 +885,10 @@
     @media (max-width: 640px) {
         section { padding: 4.5rem 0; }
         .services-grid, .process-grid, .why-grid, .form-row, .plan-picker { grid-template-columns: 1fr; }
+        .reviews-grid { grid-template-columns: 1fr; gap: 0.9rem; }
+        .reviews-form { padding: 1.15rem; }
+        .reviews-form h3 { font-size: 1.2rem; }
+        .reviews-form-wrap { margin-top: 2.25rem; }
         .booking-panel { padding: 1.5rem; }
         .modal-overlay { padding: 1.5rem 1rem; }
         .hero { padding: 3.5rem 0 4rem; }
@@ -883,6 +966,7 @@
             <a href="#services">Services</a>
             <a href="#why">Why Us</a>
             <a href="#process">How It Works</a>
+            <a href="#reviews">Reviews</a>
             <a href="#contact">Contact</a>
             <a href="#booking" class="btn">Book Now <span class="arrow">→</span></a>
         </nav>
@@ -1172,16 +1256,10 @@
                 </form>
             </div>
 
-            <!-- ============ Confirmation link ============ -->
-            <div class="i-booked" id="confirm-link-box" style="display:none">
-                <p class="i-booked-note">Almost done! Open the confirmation link below — or copy it and send it to us — to lock in your slot. The link works once.</p>
-                <p class="i-booked-when" id="confirm-link-when"></p>
-                <div class="confirm-link-row">
-                    <input type="text" id="confirm-link-input" class="confirm-link-input" readonly aria-label="Your unique confirmation link">
-                    <button type="button" class="btn btn-ghost" id="confirm-link-copy">Copy</button>
-                </div>
-                <p class="i-booked-note" style="font-size:0.8rem">The link is also included in the text message — sending it is enough.</p>
-            </div>
+            <!-- After submitting, the visitor is handed off to their
+                 Messages app. The confirmation link exists ONLY inside
+                 that pre-filled text message to the business number —
+                 it is never displayed, stored, or copyable on this page. -->
 
         </div>
     </section>
@@ -1204,6 +1282,57 @@
         </div>
     </section>
 
+    <!-- ============ Reviews ============ -->
+    <section class="reviews" id="reviews">
+        <div class="container">
+            <div class="section-head">
+                <span class="kicker">Reviews</span>
+                <h2>What our customers say</h2>
+                <p>Real reviews from real driveways. Every review is checked by our team before it appears here.</p>
+            </div>
+
+            <p class="reviews-summary" id="reviews-summary" hidden>
+                <span class="avg-num" id="reviews-avg"></span>
+                <span class="stars" id="reviews-avg-stars" aria-hidden="true"></span>
+                <span id="reviews-count"></span>
+            </p>
+
+            <div class="reviews-grid" id="reviews-grid" aria-live="polite"></div>
+
+            <div class="reviews-form-wrap" id="review-form-wrap">
+                <form class="reviews-form" id="review-form" novalidate>
+                    <h3>Leave a review</h3>
+                    <p class="form-sub">Had your car detailed? Tell other drivers how it went — we read every single one.</p>
+                    <div class="field">
+                        <label>Your rating <span class="req">*</span></label>
+                        <div class="star-input" id="star-input" role="radiogroup" aria-label="Star rating"></div>
+                    </div>
+                    <div class="form-row">
+                        <div class="field">
+                            <label for="review-name">Your name <span class="req">*</span></label>
+                            <input type="text" id="review-name" maxlength="40" placeholder="Jane D." autocomplete="name">
+                        </div>
+                        <div class="field">
+                            <label for="review-vehicle">Your vehicle <span style="color:var(--text-dim);font-weight:400">(optional)</span></label>
+                            <input type="text" id="review-vehicle" maxlength="60" placeholder="2021 Honda CR-V">
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label for="review-text">Your review <span class="req">*</span></label>
+                        <textarea id="review-text" maxlength="1000" rows="4" placeholder="How did the detail turn out?"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-lg">Submit Review <span class="arrow">→</span></button>
+                    <p class="form-note">Reviews are checked by our team before they appear on the site — usually within a day.</p>
+                </form>
+                <div class="review-thanks" id="review-thanks">
+                    <h3>Thank you!</h3>
+                    <p>Thanks for the kind words! Your review is in the queue for our quick once-over and will appear on the site shortly.</p>
+                    <button type="button" class="again-link" id="review-again">Write another review</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
 </main>
 
 <footer class="site-footer">
@@ -1216,6 +1345,7 @@
             <a href="#services">Packages</a>
             <a href="#booking">Book</a>
             <a href="#prep">Water &amp; Prep</a>
+            <a href="#reviews">Reviews</a>
             <span class="footer-sep" aria-hidden="true">|</span>
             <a href="#" data-legal="cookie">Cookie Statement</a>
             <a href="#" data-legal="privacy">Privacy Policy</a>
@@ -1517,8 +1647,8 @@
            SCHEDULE (recurring):
            - Mon–Thu: single slot, 4 times — 3:30 PM, 3:45 PM, 4:00 PM, 4:15 PM
            - Friday: single slot, 2 times — 4:45 PM, 5:00 PM
-           - Sat + Sun: three independent slots (Morning ×5, Early
-             afternoon ×3, Late afternoon ×2) — all open at once
+           - Sat + Sun: two independent slots (Morning ×5, Early
+             afternoon ×3) — all open at once
            /* OWNER LIST: add fully-booked days here as 'YYYY-MM-DD'
            (e.g. '2026-09-15') to x them out for every visitor — the crew
            completes one detail job per day. Bookings made on a device x-out
@@ -1541,7 +1671,12 @@
             '2026-09-27', // Sun, Sep 27 2026 — fully blocked (all slots, all times)
             '2026-10-02',
             '2026-10-03',
-            '2026-10-04'
+            '2026-10-04',
+            '2026-09-29', // Tue, Sep 29 2026 — fully blocked (client job)
+            '2026-10-06', // Tue, Oct 6 2026 — fully blocked (client job)
+            '2026-10-07', // Wed, Oct 7 2026 — fully blocked (client job)
+            '2026-10-16', // Fri, Oct 16 2026 — fully blocked
+            '2026-10-27'  // Tue, Oct 27 2026 — fully blocked
         ];
 
         var PARTIAL_DAY_OPEN_SLOTS = {
@@ -1564,7 +1699,7 @@
            independent slot groups below). */
         var MON_THU_TIMES = ['3:30 PM', '3:45 PM', '4:00 PM', '4:15 PM'];
         var FRIDAY_TIMES = ['4:45 PM', '5:00 PM'];
-        var SATURDAY_TIMES = ['8:30 AM', '8:45 AM', '9:00 AM', '9:15 AM', '9:30 AM', '1:00 PM', '1:15 PM', '1:30 PM', '4:45 PM', '5:00 PM'];
+        var SATURDAY_TIMES = ['8:30 AM', '8:45 AM', '9:00 AM', '9:15 AM', '9:30 AM', '1:00 PM', '1:15 PM', '1:30 PM'];
 
         /* Bookings must be made at least 24 hours before the appointment
            time. Slots less than 24 hours away (measured to the appointment
@@ -1576,7 +1711,7 @@
             return new Date(d.y, d.m, d.d).getTime() + parseTimeLabel(d.time);
         }
 
-        /* '4:45 PM' -> minutes from midnight (NaN when unparseable —
+        /* '1:30 PM' -> minutes from midnight (NaN when unparseable —
            fail open so a bad label never silently kills a slot). */
         function parseTimeLabel(label) {
             var parts = (label || '').trim().split(/\s+/);
@@ -1647,15 +1782,14 @@
         var slotLabel = document.getElementById('slot-label');
 
         /* ---- Weekend slot groups (mirror of WEEKEND_SLOT_GROUPS in
-           server.js — keep both in sync). Saturday/Sunday run three
-           independent slots: Morning (5 times), Early afternoon (3)
-           and Late afternoon (2). All slots are bookable at once in
-           any order. Booking one time closes out its own slot only;
-           the day crosses off when all three slots have been used. */
+           server.js — keep both in sync). Saturday/Sunday run two
+           independent slots: Morning (5 times) and Early afternoon (3).
+           All slots are bookable at once in any order. Booking one time
+           closes out its own slot only; the day crosses off when both
+           slots have been used. */
         var WEEKEND_SLOT_GROUPS = [
             { name: 'Morning',         times: ['8:30 AM', '8:45 AM', '9:00 AM', '9:15 AM', '9:30 AM'] },
-            { name: 'Early afternoon', times: ['1:00 PM', '1:15 PM', '1:30 PM'] },
-            { name: 'Late afternoon',  times: ['4:45 PM', '5:00 PM'] }
+            { name: 'Early afternoon', times: ['1:00 PM', '1:15 PM', '1:30 PM'] }
         ];
 
         function timesForDow(dow) {
@@ -1879,6 +2013,179 @@
 
 
 
+        /* ============ Reviews ============ */
+        var reviewsGrid = document.getElementById('reviews-grid');
+        var reviewsSummary = document.getElementById('reviews-summary');
+        var reviewsAvgEl = document.getElementById('reviews-avg');
+        var reviewsAvgStars = document.getElementById('reviews-avg-stars');
+        var reviewsCountEl = document.getElementById('reviews-count');
+
+        /* Escape everything that ever gets rendered — reviews are
+           visitor input, so they are never inserted as HTML. */
+        function escHtml(s) {
+            return String(s == null ? '' : s)
+                .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+        }
+
+        function starRow(n) {
+            var out = '';
+            for (var i = 1; i <= 5; i++) out += i <= n ? '\u2605' : '\u2606';
+            return out;
+        }
+
+        function timeAgo(iso) {
+            var then = new Date(iso).getTime();
+            if (isNaN(then)) return '';
+            var s = Math.max(1, Math.floor((Date.now() - then) / 1000));
+            if (s < 60) return 'just added';
+            var m = Math.floor(s / 60);
+            if (m < 60) return m + (m === 1 ? ' minute ago' : ' minutes ago');
+            var h = Math.floor(m / 60);
+            if (h < 24) return h + (h === 1 ? ' hour ago' : ' hours ago');
+            var d = Math.floor(h / 24);
+            if (d < 30) return d + (d === 1 ? ' day ago' : ' days ago');
+            var mo = Math.floor(d / 30);
+            if (mo < 12) return mo + (mo === 1 ? ' month ago' : ' months ago');
+            var y = Math.floor(d / 365);
+            return y + (y === 1 ? ' year ago' : ' years ago');
+        }
+
+        function renderReviews(list) {
+            reviewsGrid.innerHTML = '';
+            if (!list.length) {
+                var empty = document.createElement('p');
+                empty.className = 'review-empty';
+                empty.textContent = 'No reviews yet — be the first to tell everyone how your detail went.';
+                reviewsGrid.appendChild(empty);
+                return;
+            }
+            var sum = 0;
+            list.forEach(function (r) { sum += r.rating; });
+            var avg = sum / list.length;
+            reviewsAvgEl.textContent = avg.toFixed(1);
+            reviewsAvgStars.textContent = starRow(Math.round(avg));
+            reviewsCountEl.textContent = list.length + (list.length === 1 ? ' review' : ' reviews');
+            reviewsSummary.hidden = false;
+            list.forEach(function (r) {
+                var card = document.createElement('article');
+                card.className = 'review-card';
+                var initial = (r.name || '?').trim().charAt(0).toUpperCase() || '?';
+                var sub = r.vehicle ? escHtml(r.vehicle) + ' \u00b7 ' : '';
+                card.innerHTML =
+                    '<div class="review-stars" aria-label="' + r.rating + ' out of 5 stars">' + starRow(r.rating) + '</div>' +
+                    '<p class="review-text"></p>' +
+                    '<div class="review-meta">' +
+                        '<span class="review-avatar" aria-hidden="true">' + escHtml(initial) + '</span>' +
+                        '<div>' +
+                            '<div class="who"></div>' +
+                            '<div class="when"></div>' +
+                        '</div>' +
+                    '</div>';
+                card.querySelector('.review-text').textContent = r.text;
+                card.querySelector('.who').textContent = r.name;
+                card.querySelector('.when').textContent = sub + timeAgo(r.createdAt);
+                reviewsGrid.appendChild(card);
+            });
+        }
+
+        function refreshReviews() {
+            fetch('/api/reviews').then(function (r) { return r.json(); }).then(function (d) {
+                if (!d || !Array.isArray(d.reviews)) return;
+                renderReviews(d.reviews);
+            }).catch(function () { /* keep whatever is on screen */ });
+        }
+        refreshReviews();
+
+        /* Star picker */
+        var starInput = document.getElementById('star-input');
+        var reviewRating = 0;
+        for (var si = 1; si <= 5; si++) {
+            (function (val) {
+                var b = document.createElement('button');
+                b.type = 'button';
+                b.setAttribute('role', 'radio');
+                b.setAttribute('aria-checked', 'false');
+                b.setAttribute('aria-label', val + ' star' + (val === 1 ? '' : 's'));
+                b.innerHTML = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.6l2.9 6 6.6.9-4.8 4.6 1.2 6.5L12 17.5l-5.9 3.1 1.2-6.5L2.5 9.5l6.6-.9z"/></svg>';
+                b.addEventListener('click', function () { setRating(val); });
+                starInput.appendChild(b);
+            })(si);
+        }
+        function setRating(n) {
+            reviewRating = n;
+            Array.prototype.forEach.call(starInput.children, function (btn, idx) {
+                btn.classList.toggle('on', idx < n);
+                btn.setAttribute('aria-checked', String(idx + 1 === n));
+            });
+        }
+
+        /* Review form — same pattern as the booking form: server holds
+           the state; this page never stores what the visitor typed. */
+        var reviewForm = document.getElementById('review-form');
+        var reviewThanks = document.getElementById('review-thanks');
+        reviewForm.addEventListener('submit', function (e) { e.preventDefault(); submitReview(); });
+
+        function resetReviewForm() {
+            reviewForm.reset();
+            setRating(0);
+            reviewForm.style.display = '';
+            reviewThanks.style.display = 'none';
+        }
+        document.getElementById('review-again').addEventListener('click', resetReviewForm);
+
+        async function submitReview() {
+            var name = document.getElementById('review-name');
+            var text = document.getElementById('review-text');
+            if (!reviewRating) {
+                showToast('Tap the stars to choose a rating first.');
+                starInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                return;
+            }
+            if (!name.value.trim()) {
+                showToast('Please add your name to your review.');
+                name.focus();
+                return;
+            }
+            var body = text.value.trim();
+            if (!body) {
+                showToast('Please write a few words about your experience.');
+                text.focus();
+                return;
+            }
+            var submitBtn = reviewForm.querySelector('button[type="submit"]');
+            submitBtn.disabled = true;
+            try {
+                var resp = await fetch('/api/reviews', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        name: name.value.trim(),
+                        rating: reviewRating,
+                        text: body,
+                        vehicle: document.getElementById('review-vehicle').value.trim()
+                    })
+                });
+                if (resp.ok) {
+                    reviewForm.style.display = 'none';
+                    reviewThanks.style.display = '';
+                    showToast('Review submitted — it will appear once we approve it.');
+                } else {
+                    var data = null;
+                    try { data = await resp.json(); } catch (e2) { /* non-JSON error */ }
+                    showToast((data && data.error) || 'Could not submit your review — please try again.');
+                }
+            } catch (err) {
+                showToast('Could not reach the server — please try again.');
+            }
+            submitBtn.disabled = false;
+        }
+
+        /* Privacy: never retain anything the visitor typed. */
+        window.addEventListener('pagehide', function () {
+            if (reviewForm.style.display !== 'none') resetReviewForm();
+        }, true);
+
         /* Toast */
         var toast = document.getElementById('toast');
         var toastMsg = document.getElementById('toast-msg');
@@ -1979,9 +2286,9 @@
                 return;
             }
             if (selectedDate.dow === 0 || selectedDate.dow === 6) {
-                /* Weekend days: three independent slots of three times.
-                   Re-check against the latest server state right before
-                   requesting a link. */
+                /* Weekend days: two independent slots (morning and
+                   early afternoon). Re-check against the latest server
+                   state right before requesting a link. */
                 var g = slotGroupOf(selectedTime);
                 if (g === -1 || !slotIsOpen(selectedDate.key, g)) {
                     showToast('That time is not available — please pick another slot.');
@@ -2008,9 +2315,9 @@
                 + (vehicle ? '\n• Vehicle: ' + vehicle : '')
                 + (petHair ? '\n• Add-on: Pet hair removal (+$20)' : '');
             /* Ask the server for a unique, one-time confirmation link tied
-               to exactly this date + time slot. */
+               to exactly this date + time slot. It is handed off ONLY via
+               the pre-filled text message — never shown on this page. */
             var confirmUrl = '';
-            var box = document.getElementById('confirm-link-box');
             try {
                 var resp = await fetch('/api/request-link', {
                     method: 'POST',
@@ -2034,17 +2341,15 @@
                 showToast('Could not reach the booking server — please try again.');
                 return;
             }
+            /* The link goes ONLY into the pre-filled text message to the
+               business number — never rendered anywhere on the page. */
             if (confirmUrl) {
                 msg += '\n\nConfirm my booking: ' + confirmUrl;
             }
             window.location.href = 'sms:+15086659868?&body=' + encodeURIComponent(msg);
-            /* Sending the text does NOT confirm anything. The unique link
-               does: whoever opens it books the slot for every visitor. */
-            document.getElementById('confirm-link-when').textContent =
-                prettyDate(selectedDate.y, selectedDate.m, selectedDate.d) + ' at ' + selectedTime;
-            document.getElementById('confirm-link-input').value = confirmUrl || '(link unavailable — please try again)';
-            box.style.display = '';
-            box.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            /* Sending the text does NOT confirm anything. Confirming
+               requires the unique link (from the text) AND the PIN —
+               checked server-side. */
             selectedTime = null;
             form.reset();
             updateMultiCarNotice();
@@ -2054,20 +2359,6 @@
                 t.setAttribute('aria-pressed', 'false');
             });
         }
-
-        /* Copy button for the confirmation link */
-        document.getElementById('confirm-link-copy').addEventListener('click', function () {
-            var input = document.getElementById('confirm-link-input');
-            if (!input.value || input.value.indexOf('http') !== 0) return;
-            function done() { showToast('Confirmation link copied — open it or send it to confirm.'); }
-            if (navigator.clipboard && navigator.clipboard.writeText) {
-                navigator.clipboard.writeText(input.value).then(done, function () {
-                    input.select(); document.execCommand('copy'); done();
-                });
-            } else {
-                input.select(); document.execCommand('copy'); done();
-            }
-        });
 
         /* Privacy: never retain anything the visitor typed. Clear the form
            the moment they leave the page (reload, close, or navigate away). */

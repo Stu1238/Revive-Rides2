@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Review Moderation — Revive Rides</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23232323'/%3E%3Cpath d='M12 40 L24 22 H40 L52 40' fill='none' stroke='%2300cfff' stroke-width='5' stroke-linecap='round' stroke-linejoin='round'/%3E%3Ccircle cx='20' cy='44' r='5' fill='%230033cc'/%3E%3Ccircle cx='44' cy='44' r='5' fill='%230033cc'/%3E%3C/svg%3E">
+<style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+        --bg: #232323;
+        --bg-raised: #2a2a2a;
+        --bg-card: #2e2e2e;
+        --line: rgba(255, 255, 255, 0.08);
+        --line-strong: rgba(255, 255, 255, 0.18);
+        --blue: #0033cc;
+        --cyan: #00cfff;
+        --cyan-soft: rgba(0, 207, 255, 0.12);
+        --text: #f2f3f4;
+        --text-muted: #b6b9be;
+        --text-dim: #8a8d93;
+        --shadow-lg: 0 24px 48px -16px rgba(0, 0, 0, 0.45);
+        --radius: 16px;
+        --radius-sm: 10px;
+        --font: 'Josefin Sans', 'Trebuchet MS', sans-serif;
+    }
+
+    body {
+        font-family: var(--font);
+        background: var(--bg);
+        color: var(--text);
+        line-height: 1.6;
+        -webkit-font-smoothing: antialiased;
+        padding: 2.5rem 1.25rem 4rem;
+    }
+
+    .wrap { width: min(880px, 100%); margin: 0 auto; }
+
+    h1 { font-size: 1.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.02em; margin-bottom: 0.35rem; }
+
+    .sub { color: var(--text-dim); font-size: 0.9rem; margin-bottom: 2rem; }
+
+    button, input, textarea { font: inherit; color: inherit; }
+
+    .btn {
+        display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
+        padding: 0.75rem 1.5rem;
+        background: var(--blue); color: #fff;
+        border: none; border-radius: var(--radius-sm);
+        font-weight: 700; font-size: 0.95rem;
+        cursor: pointer;
+        transition: filter 0.2s ease, transform 0.2s ease;
+    }
+    .btn:hover { filter: brightness(1.15); transform: translateY(-1px); }
+    .btn:disabled { opacity: 0.55; cursor: not-allowed; transform: none; }
+
+    .btn-ghost {
+        background: transparent; color: var(--text-muted);
+        border: 1px solid var(--line-strong);
+    }
+    .btn-ghost:hover { border-color: var(--cyan); color: var(--cyan); filter: none; }
+
+    .btn-danger {
+        background: transparent; color: #ff5a6e;
+        border: 1px solid rgba(255, 90, 110, 0.45);
+    }
+    .btn-danger:hover { background: rgba(255, 90, 110, 0.1); filter: none; }
+
+    .btn-approve {
+        background: var(--cyan); color: #04101c;
+    }
+
+    .field { display: flex; flex-direction: column; gap: 0.45rem; margin-bottom: 1.25rem; }
+
+    .field label { font-size: 0.85rem; font-weight: 600; color: var(--text-muted); }
+
+    .field input {
+        width: 100%;
+        padding: 0.85rem 1rem;
+        background: var(--bg);
+        border: 1px solid var(--line-strong);
+        border-radius: var(--radius-sm);
+        font-size: 0.95rem;
+        color-scheme: dark;
+    }
+    .field input:focus { outline: none; border-color: var(--cyan); box-shadow: 0 0 0 3px rgba(0, 207, 255, 0.15); }
+
+    .card {
+        background: var(--bg-card);
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        padding: 2rem;
+        box-shadow: var(--shadow-lg);
+    }
+
+    .hidden { display: none !important; }
+
+    .err { color: #ff5a6e; font-size: 0.88rem; margin-top: 0.75rem; min-height: 1.2em; font-weight: 600; }
+
+    .status-row {
+        display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between;
+        gap: 0.75rem;
+        margin-bottom: 1.5rem;
+    }
+    .status-row .pending-badge {
+        display: inline-flex; align-items: center; gap: 0.5rem;
+        padding: 0.4rem 0.9rem;
+        background: var(--cyan-soft);
+        border: 1px solid rgba(0, 207, 255, 0.3);
+        border-radius: 999px;
+        color: var(--cyan);
+        font-size: 0.82rem; font-weight: 700;
+    }
+
+    .review-item {
+        background: var(--bg-raised);
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        padding: 1.4rem 1.4rem 1.2rem;
+        margin-bottom: 1rem;
+    }
+    .review-item.pending { border-left: 3px solid var(--cyan); }
+    .review-item.approved { border-left: 3px solid rgba(0, 207, 255, 0.25); opacity: 0.85; }
+
+    .review-top { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.6rem; margin-bottom: 0.4rem; }
+    .review-stars { color: var(--cyan); letter-spacing: 0.12em; }
+    .review-name { font-weight: 700; }
+    .review-badge {
+        font-size: 0.68rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+        padding: 0.15rem 0.55rem; border-radius: 999px;
+    }
+    .review-badge.pending { background: var(--cyan-soft); color: var(--cyan); }
+    .review-badge.approved { background: rgba(0, 51, 204, 0.35); color: #9db4ff; }
+
+    .review-text { color: var(--text-muted); font-size: 0.95rem; white-space: pre-wrap; overflow-wrap: anywhere; margin-bottom: 0.75rem; }
+
+    .review-actions { display: flex; flex-wrap: wrap; gap: 0.6rem; }
+    .review-actions .btn { padding: 0.5rem 1rem; font-size: 0.85rem; }
+
+    .empty { text-align: center; color: var(--text-dim); padding: 2.5rem 1rem; border: 1px dashed var(--line-strong); border-radius: var(--radius); }
+
+    .toast {
+        position: fixed; left: 50%; bottom: 1.5rem;
+        transform: translate(-50%, 150%);
+        background: var(--bg-card);
+        border: 1px solid rgba(0, 207, 255, 0.4);
+        border-radius: 12px;
+        padding: 0.8rem 1.3rem;
+        font-size: 0.9rem;
+        transition: transform 0.35s ease;
+        z-index: 50;
+    }
+    .toast.show { transform: translate(-50%, 0); }
+
+    @media (max-width: 640px) {
+        .card { padding: 1.4rem 1.1rem; }
+        h1 { font-size: 1.45rem; }
+    }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+    <!-- ============ Login gate ============ -->
+    <div id="login-view" class="card" style="max-width:460px;margin:3rem auto 0;">
+        <h1>Review Moderation</h1>
+        <p class="sub">Owner access only. Enter the admin key to continue.</p>
+        <form id="login-form" novalidate>
+            <div class="field">
+                <label for="admin-key">Admin key</label>
+                <input type="password" id="admin-key" autocomplete="current-password" autofocus>
+            </div>
+            <button type="submit" class="btn" id="login-btn" style="width:100%">Unlock Dashboard</button>
+            <p class="err" id="login-err"></p>
+        </form>
+    </div>
+
+    <!-- ============ Moderation dashboard ============ -->
+    <div id="dash-view" class="hidden">
+        <div class="status-row">
+            <div>
+                <h1>Review Moderation</h1>
+                <p class="sub" style="margin-bottom:0">Approve reviews to publish them on the site. Unapprove to pull them back. Delete removes them forever.</p>
+            </div>
+            <div style="display:flex; gap:0.6rem; align-items:center;">
+                <span class="pending-badge" id="pending-badge" hidden><span id="pending-count">0</span> pending</span>
+                <button type="button" class="btn btn-ghost" id="logout-btn">Log out</button>
+            </div>
+        </div>
+
+        <div id="list"></div>
+    </div>
+
+</div>
+
+<div class="toast" id="toast">Saved</div>
+
+<script>
+(function () {
+    'use strict';
+
+    /* The one-time session token lives ONLY in this tab's JS memory —
+       never localStorage, never a cookie. Reloading asks for the key
+       again. The key itself is likewise never persisted. */
+    var token = null;
+
+    var loginView = document.getElementById('login-view');
+    var dashView = document.getElementById('dash-view');
+    var loginForm = document.getElementById('login-form');
+    var loginBtn = document.getElementById('login-btn');
+    var loginErr = document.getElementById('login-err');
+    var listEl = document.getElementById('list');
+    var pendingBadge = document.getElementById('pending-badge');
+    var pendingCount = document.getElementById('pending-count');
+    var toast = document.getElementById('toast');
+    var toastTimer = null;
+
+    function showToast(msg) {
+        toast.textContent = msg;
+        toast.classList.add('show');
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(function () { toast.classList.remove('show'); }, 2600);
+    }
+
+    function esc(s) {
+        return String(s == null ? '' : s)
+            .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+    }
+
+    function starRow(n) {
+        var out = '';
+        for (var i = 1; i <= 5; i++) out += i <= n ? '\u2605' : '\u2606';
+        return out;
+    }
+
+    function fmtDate(iso) {
+        var t = new Date(iso).getTime();
+        if (isNaN(t)) return '';
+        return new Date(t).toLocaleString();
+    }
+
+    async function api(action, id) {
+        var resp = await fetch('/api/admin/reviews', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ token: token, action: action, id: id || '' })
+        });
+        var data = null;
+        try { data = await resp.json(); } catch (e) { /* non-JSON */ }
+        if (resp.status === 401) {
+            token = null;
+            dashView.classList.add('hidden');
+            loginView.classList.remove('hidden');
+            throw new Error('Session expired — log in again.');
+        }
+        if (!resp.ok) throw new Error((data && data.error) || 'Request failed.');
+        return data;
+    }
+
+    function renderList(reviews) {
+        listEl.innerHTML = '';
+        if (!reviews.length) {
+            listEl.innerHTML = '<p class="empty">No reviews yet. When customers submit reviews from the site, they show up here for approval.</p>';
+            return;
+        }
+        reviews.forEach(function (r) {
+            var item = document.createElement('div');
+            item.className = 'review-item ' + (r.status === 'approved' ? 'approved' : 'pending');
+            item.innerHTML =
+                '<div class="review-top">' +
+                    '<span class="review-stars" aria-hidden="true">' + starRow(r.rating) + '</span>' +
+                    '<span class="review-name">' + esc(r.name) + '</span>' +
+                    (r.vehicle ? '<span style="color:var(--text-dim);font-size:0.85rem">' + esc(r.vehicle) + '</span>' : '') +
+                    '<span class="review-badge ' + esc(r.status) + '">' + esc(r.status) + '</span>' +
+                '</div>' +
+                '<p class="review-text"></p>' +
+                '<div class="review-actions">' +
+                    (r.status === 'pending'
+                        ? '<button type="button" class="btn btn-approve" data-act="approve" data-id="' + esc(r.id) + '">Approve &amp; publish</button>'
+                        : '<button type="button" class="btn btn-ghost" data-act="unapprove" data-id="' + esc(r.id) + '">Unapprove</button>') +
+                    '<button type="button" class="btn btn-danger" data-act="delete" data-id="' + esc(r.id) + '">Delete</button>' +
+                '</div>';
+            item.querySelector('.review-text').textContent = r.text;
+            listEl.appendChild(item);
+        });
+    }
+
+    async function refresh() {
+        var data = await api('list');
+        renderList(data.reviews || []);
+        if (data.pending > 0) {
+            pendingCount.textContent = data.pending;
+            pendingBadge.hidden = false;
+        } else {
+            pendingBadge.hidden = true;
+        }
+    }
+
+    listEl.addEventListener('click', async function (e) {
+        var btn = e.target.closest('button[data-act]');
+        if (!btn) return;
+        var act = btn.getAttribute('data-act');
+        var id = btn.getAttribute('data-id');
+        if (act === 'delete' && !window.confirm('Delete this review permanently? This cannot be undone.')) return;
+        btn.disabled = true;
+        try {
+            var data = await api(act, id);
+            renderList(data.reviews || []);
+            if (data.pending > 0) { pendingCount.textContent = data.pending; pendingBadge.hidden = false; }
+            else { pendingBadge.hidden = true; }
+            showToast(act === 'approve' ? 'Review approved and published.'
+                : act === 'unapprove' ? 'Review pulled back to pending.'
+                : 'Review deleted.');
+        } catch (err) {
+            showToast(err.message);
+            if (token) btn.disabled = false;
+        }
+    });
+
+    loginForm.addEventListener('submit', async function (e) {
+        e.preventDefault();
+        var keyInput = document.getElementById('admin-key');
+        if (!keyInput.value) { loginErr.textContent = 'Enter the admin key.'; return; }
+        loginBtn.disabled = true;
+        loginErr.textContent = '';
+        try {
+            var resp = await fetch('/api/admin/reviews/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ key: keyInput.value })
+            });
+            var data = await resp.json().catch(function () { return null; });
+            if (!resp.ok) {
+                loginErr.textContent = (data && data.error) || 'Login failed.';
+                return;
+            }
+            token = data.token;
+            keyInput.value = '';
+            loginView.classList.add('hidden');
+            dashView.classList.remove('hidden');
+            await refresh();
+        } catch (err) {
+            loginErr.textContent = 'Could not reach the server — try again.';
+        }
+        loginBtn.disabled = false;
+    });
+
+    document.getElementById('logout-btn').addEventListener('click', function () {
+        token = null;
+        dashView.classList.add('hidden');
+        loginView.classList.remove('hidden');
+    });
+
+    /* Wipe the session token when the tab is hidden or closed. */
+    window.addEventListener('pagehide', function () { token = null; }, true);
+})();
+</script>
+</body>
+</html>
