@@ -178,9 +178,7 @@ const FULLY_BLOCKED_DATES = new Set([
     '2026-10-03',
     '2026-10-04',
     '2026-09-29', // Tue, Sep 29 2026 — fully blocked (client job)            '2026-10-06', // Tue, Oct 6 2026 — fully blocked (client job)
-            '2026-10-07', // Wed, Oct 7 2026 — fully blocked (client job)
-            '2026-10-16', // Fri, Oct 16 2026 — fully blocked
-            '2026-10-27'  // Tue, Oct 27 2026 — fully blocked
+            '2026-10-07' // Wed, Oct 7 2026 — fully blocked (client job)
 ]);
 
 const PARTIAL_DAY_OPEN_SLOTS = {
